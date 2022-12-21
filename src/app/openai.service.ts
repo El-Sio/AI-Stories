@@ -3,18 +3,23 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { Choice, Completion } from './data-model';
+import { AppInitService } from './app-init.service';
 
 @Injectable()
 export class OpenaiService {
   constructor(private http: HttpClient) {}
 
-  private token = '';
+  private token = AppInitService.settings.secret;
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: 'Bearer ' + this.token,
     }),
   };
+
+  getToken(): Observable<JSON> {
+    return this.http.get<JSON>('https://japansio.info/api/secret.json');
+  }
 
   testCall(): Observable<JSON> {
     return this.http.get<JSON>(
@@ -25,9 +30,9 @@ export class OpenaiService {
 
   getCompletion(prompt: string): Observable<Completion> {
     let body = {
-      model: 'text-davinci-002',
+      model: 'text-davinci-003',
       prompt: prompt,
-      max_tokens: 20,
+      max_tokens: 1500,
       temperature: 0.5,
     };
     return this.http.post<Completion>(
