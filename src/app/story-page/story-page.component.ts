@@ -11,11 +11,12 @@ import { OpenaiService } from '../openai.service';
 export class StoryPageComponent implements OnInit {
   public storyPlace = '';
   public storyPurpose = '';
-  public story = 'Chargement en cours...';
+  public story = '';
 
   constructor(public openai: OpenaiService) {}
 
   async generateStory() {
+    this.story = 'Chargement en cours...';
     let prompt =
       'raconte moi une histoire pour enfant ou fifi et rhino vont à ' +
       this.storyPlace +
