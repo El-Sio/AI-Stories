@@ -25,7 +25,7 @@ export class OpenaiService {
 
   getCompletion(prompt: string): Observable<Completion> {
     let body = {
-      model: 'text-davinci-003',
+      model: 'text-davinci-002',
       prompt: prompt,
       max_tokens: 20,
       temperature: 0.5,
