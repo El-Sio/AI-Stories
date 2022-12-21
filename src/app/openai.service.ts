@@ -8,7 +8,7 @@ import { Choice, Completion } from './data-model';
 export class OpenaiService {
   constructor(private http: HttpClient) {}
 
-  private token = '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';
+  private token = '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';
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
