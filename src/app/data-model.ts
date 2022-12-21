@@ -5,6 +5,15 @@ export interface Choice {
   finish_reason: string;
 }
 
+export interface ImageAI {
+  created: number;
+  data: [
+    {
+      url: string;
+    }
+  ];
+}
+
 export interface Completion {
   id: string;
   object: string;

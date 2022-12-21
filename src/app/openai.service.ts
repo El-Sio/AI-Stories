@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
-import { Choice, Completion } from './data-model';
+import { ImageAI, Completion } from './data-model';
 import { AppInitService } from './app-init.service';
 
 @Injectable()
@@ -37,6 +37,19 @@ export class OpenaiService {
     };
     return this.http.post<Completion>(
       'https://api.openai.com/v1/completions',
+      body,
+      this.httpOptions
+    );
+  }
+
+  getImage(prompt: string): Observable<ImageAI> {
+    let body = {
+      prompt: prompt,
+      n: 2,
+      size: '1024x1024',
+    };
+    return this.http.post<ImageAI>(
+      'https://api.openai.com/v1/images/generations',
       body,
       this.httpOptions
     );
