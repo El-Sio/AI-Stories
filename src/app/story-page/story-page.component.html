@@ -25,7 +25,7 @@
     <button (click)="generateStory()">Generate Story</button>
   </form>
 </div>
-
+<div *ngIf="isloading" id="loading"></div>
 <div>
   <p>{{ story }}</p>
 </div>

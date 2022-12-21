@@ -12,20 +12,29 @@ export class StoryPageComponent implements OnInit {
   public storyPlace = '';
   public storyPurpose = '';
   public story = '';
+  public isloading = false;
 
   constructor(public openai: OpenaiService) {}
 
   async generateStory() {
+    this.isloading = true;
     this.story = 'Chargement en cours...';
     let prompt =
       'raconte moi une histoire pour enfant ou fifi et rhino vont à ' +
       this.storyPlace +
       ' pour faire ' +
       this.storyPurpose;
-    this.openai.getCompletion(prompt).subscribe((x) => {
-      this.story = x.choices[0].text;
-      console.log(this.story);
-    });
+    this.openai.getCompletion(prompt).subscribe(
+      (x) => {
+        this.story = x.choices[0].text;
+        console.log(this.story);
+        this.isloading = false;
+      },
+      (err) => {
+        this.isloading = false;
+        this.story = err.message;
+      }
+    );
   }
 
   ngOnInit() {}

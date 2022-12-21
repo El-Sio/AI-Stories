@@ -27,7 +27,7 @@ export class OpenaiService {
     let body = {
       model: 'text-davinci-003',
       prompt: prompt,
-      max_tokens: 2048,
+      max_tokens: 20,
       temperature: 0.5,
     };
     return this.http.post<Completion>(
