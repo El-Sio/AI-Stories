@@ -1,0 +1,13 @@
+<form>
+  <label>Fifi et Rhino vont à : </label
+  ><input type="text" [(ngModel)]="storyPlace" name="place" /><br />
+  <br />
+  <label>Pour faire : </label
+  ><input type="text" [(ngModel)]="storyPurpose" name="purpose" /><br />
+  <br />
+  <button (click)="generateStory()">Generate Story</button>
+</form>
+
+<div>
+  <p>{{ story }}</p>
+</div>
