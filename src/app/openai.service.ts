@@ -46,7 +46,7 @@ export class OpenaiService {
     let body = {
       prompt: prompt,
       n: 2,
-      size: '1024x1024',
+      size: '512x512',
     };
     return this.http.post<ImageAI>(
       'https://api.openai.com/v1/images/generations',

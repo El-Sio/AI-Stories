@@ -14,22 +14,24 @@ export class StoryPageComponent implements OnInit {
   public story = '';
   public imgsrc = '';
   public isloading = false;
+  public illustrated = false;
 
   constructor(public openai: OpenaiService) {}
 
-  async generateStory() {
+  generateStory(): void {
     this.isloading = true;
     this.story = 'Chargement en cours...';
+    this.imgsrc = '';
     let prompt_txt =
-      'raconte moi une histoire pour enfant ou fifi et rhino vont à ' +
+      'raconte moi une histoire pour enfant ou fifi et rhino vont ' +
       this.storyPlace +
-      ' pour faire ' +
+      ' pour ' +
       this.storyPurpose;
 
     let prompt_img =
-      'illustration de livre pour enfants avec une giraffe et un rhinoceros qui sont à ' +
+      'illustration de livre pour enfants avec une giraffe et un rhinoceros qui ' +
       this.storyPlace +
-      ' pour faire ' +
+      ' pour ' +
       this.storyPurpose;
 
     this.openai.getCompletion(prompt_txt).subscribe(
@@ -44,17 +46,21 @@ export class StoryPageComponent implements OnInit {
       }
     );
 
-    this.openai.getImage(prompt_img).subscribe(
-      (x) => {
-        this.imgsrc = x.data[0].url;
-        console.log(this.imgsrc);
-        this.isloading = false;
-      },
-      (err) => {
-        this.isloading = false;
-        this.imgsrc = err.message;
-      }
-    );
+    console.log('illustrated :', this.illustrated);
+
+    if (this.illustrated) {
+      this.openai.getImage(prompt_img).subscribe(
+        (x) => {
+          this.imgsrc = x.data[0].url;
+          console.log(this.imgsrc);
+          this.isloading = false;
+        },
+        (err) => {
+          this.isloading = false;
+          this.imgsrc = err.message;
+        }
+      );
+    }
   }
 
   ngOnInit() {}

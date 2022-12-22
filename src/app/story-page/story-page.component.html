@@ -4,23 +4,25 @@
 </div>
 <div>
   <form>
-    <label>Fifi et Rhino vont à : </label>
+    <label>Fifi et Rhino vont : </label>
     <input
       type="text"
       [(ngModel)]="storyPlace"
       name="place"
-      placeholder="la montagne"
+      placeholder=" à la montagne"
     />
     <br />
     <br />
-    <label>Pour faire : </label>
+    <label>Pour : </label>
     <input
       type="text"
       [(ngModel)]="storyPurpose"
       name="purpose"
-      placeholder="du vélo"
+      placeholder=" faire du vélo"
     />
     <br />
+    <label>avec illustration :</label
+    ><input type="checkbox" [(ngModel)]="illustrated" name="illustration" />
     <br />
     <button (click)="generateStory()">Generate Story</button>
   </form>
@@ -33,5 +35,5 @@
 </div>
 
 <div>
-  <img src="{{ imgsrc }}" />
+  <img *ngIf="imgsrc" src="{{ imgsrc }}" width="512" height="512" />
 </div>
