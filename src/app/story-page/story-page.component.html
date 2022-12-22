@@ -1,7 +1,4 @@
-<div>
-  <p>powered by OpenAI</p>
-  <br />
-</div>
+<h1>Les histoires de Fifi et Rhino</h1>
 <div>
   <form>
     <label>Fifi et Rhino vont : </label>
@@ -21,16 +18,16 @@
       placeholder=" faire du vélo"
     />
     <br />
-    <label>avec illustration :</label
-    ><input type="checkbox" [(ngModel)]="illustrated" name="illustration" />
     <br />
-    <button (click)="generateStory()">Generate Story</button>
+    <label>avec illustration :</label
+    ><input type="checkbox" [(ngModel)]="illustrated" name="illustrated" />
+    <br />
+    <br />
+    <input type="submit" (click)="generateStory()" value="Créer une histoire" />
   </form>
 </div>
-<br />
-<div *ngIf="isloading" id="loading"></div>
-<br />
 <div>
+  <div *ngIf="isloading" id="loading"></div>
   <p>{{ story }}</p>
 </div>
 

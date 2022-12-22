@@ -11,7 +11,7 @@ import { OpenaiService } from '../openai.service';
 export class StoryPageComponent implements OnInit {
   public storyPlace = '';
   public storyPurpose = '';
-  public story = '';
+  public story = 'Votre histoire ici';
   public imgsrc = '';
   public isloading = false;
   public illustrated = false;
