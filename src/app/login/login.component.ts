@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   loginWithGoogle(): void {
     this.socialAuthService
       .signIn(GoogleLoginProvider.PROVIDER_ID)
-      .then(() => this.router.navigate(['mainpage']));
+      .then(() => this.router.navigate(['story']));
   }
 
   ngOnInit() {}
