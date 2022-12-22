@@ -1,6 +1,4 @@
 /* Add application styles & imports to this file! */
-@import url(https://fonts.googleapis.com/css?family=Roboto:100);
-
 body {
   margin-top: 100px;
   background-color: black;
@@ -8,19 +6,19 @@ body {
 }
 
 h1 {
-  font: 2em 'Roboto', sans-serif;
+  font: 2em 'verdana';
   margin-bottom: 40px;
   text-align: center;
 }
 
 p,
 label {
-  font: 1em 'Roboto', sans-serif;
+  font: 1em 'verdana';
   font-weight: bold;
 }
 
 ::placeholder {
-  font: 1em 'Roboto', sans-serif;
+  font: 1em 'verdana';
 }
 
 #loading {
