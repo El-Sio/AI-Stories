@@ -1,7 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:100);
 
 body {
-  margin-top: 100px;
+  margin-top: 50px;
   background-color: black;
   color: white;
 }
@@ -75,4 +75,7 @@ div {
   background-color: #f2f2f2;
   padding: 20px;
   margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 320px;
 }

@@ -15,7 +15,8 @@ export class StoryPageComponent implements OnInit {
   public storyPurpose = '';
   public story = 'Votre histoire ici';
   public imgsrc = '';
-  public isloading = false;
+  public isloading_img = false;
+  public isloading_txt = false;
   public illustrated = false;
 
   constructor(
@@ -25,7 +26,7 @@ export class StoryPageComponent implements OnInit {
   ) {}
 
   generateStory(): void {
-    this.isloading = true;
+    this.isloading_txt = true;
     this.story = 'Chargement en cours...';
     this.imgsrc = '';
     let prompt_txt =
@@ -44,25 +45,24 @@ export class StoryPageComponent implements OnInit {
       (x) => {
         this.story = x.choices[0].text;
         console.log(this.story);
-        this.isloading = false;
+        this.isloading_txt = false;
       },
       (err) => {
-        this.isloading = false;
+        this.isloading_txt = false;
         this.story = err.message;
       }
     );
 
-    console.log('illustrated :', this.illustrated);
-
     if (this.illustrated) {
+      this.isloading_img = true;
       this.openai.getImage(prompt_img).subscribe(
         (x) => {
           this.imgsrc = x.data[0].url;
           console.log(this.imgsrc);
-          this.isloading = false;
+          this.isloading_img = false;
         },
         (err) => {
-          this.isloading = false;
+          this.isloading_img = false;
           this.imgsrc = err.message;
         }
       );

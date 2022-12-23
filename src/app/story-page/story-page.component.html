@@ -27,12 +27,15 @@
   </form>
 </div>
 <div>
-  <div *ngIf="isloading" id="loading"></div>
+  <div *ngIf="isloading_txt" id="loading"></div>
   <p>{{ story }}</p>
 </div>
 
-<div>
-  <img *ngIf="imgsrc" src="{{ imgsrc }}" width="512" height="512" />
+<div *ngIf="imgsrc">
+  <div *ngIf="isloading_img" id="loading"></div>
+  <img *ngIf="imgsrc" src="{{ imgsrc }}" width="300" height="300" />
 </div>
 
-<button (click)="logout()">Logout</button>
+<div>
+  <button (click)="logout()">Logout</button>
+</div>
