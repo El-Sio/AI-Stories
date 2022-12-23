@@ -19,6 +19,11 @@ label {
   color: black;
 }
 
+.error {
+  font-weight: normal;
+  color: red;
+}
+
 ::placeholder {
   font: 1em 'verdana';
 }
