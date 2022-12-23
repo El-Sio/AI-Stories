@@ -33,7 +33,7 @@ export function initializeApp(appInitService: AppInitService) {
     ]),
     BrowserAnimationsModule,
   ],
-  declarations: [AppComponent, StoryPageComponent],
+  declarations: [AppComponent, StoryPageComponent, LoginComponent],
   bootstrap: [AppComponent],
   providers: [
     AppInitService,

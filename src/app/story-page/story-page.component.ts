@@ -3,6 +3,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { OpenaiService } from '../openai.service';
 import { Router } from '@angular/router';
+import { AuthenticationService } from '../authentication.service';
 
 @Component({
   selector: 'app-story-page',
@@ -17,7 +18,11 @@ export class StoryPageComponent implements OnInit {
   public isloading = false;
   public illustrated = false;
 
-  constructor(public openai: OpenaiService, public router: Router) {}
+  constructor(
+    public openai: OpenaiService,
+    public router: Router,
+    public authent: AuthenticationService
+  ) {}
 
   generateStory(): void {
     this.isloading = true;
@@ -64,7 +69,10 @@ export class StoryPageComponent implements OnInit {
     }
   }
 
-  logout(): void {}
+  logout(): void {
+    this.authent.logout();
+    this.router.navigate(['login']);
+  }
 
   ngOnInit() {}
 }
