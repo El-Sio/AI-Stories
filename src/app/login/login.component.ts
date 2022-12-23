@@ -15,13 +15,10 @@ export class LoginComponent implements OnInit {
 
   loginWithGoogle(): void {
     console.log('attempting login');
-    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(
-      () => {
-        alert('coucou');
-        this.router.navigate(['story']);
-      },
-      () => console.log('rejected')
-    );
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(() => {
+      alert('google a répondu');
+      this.router.navigate(['story']);
+    });
   }
 
   ngOnInit() {}

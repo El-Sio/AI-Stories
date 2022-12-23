@@ -51,7 +51,6 @@ export function initializeApp(appInitService: AppInitService) {
     },
     // makes sure to load config before the app initializes
     OpenaiService,
-    SocialAuthService,
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {
@@ -60,7 +59,7 @@ export function initializeApp(appInitService: AppInitService) {
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
-              '491738002919-1rqc2jv84od52p1fapgor94fm6ht5v93.apps.googleusercontent.com'
+              '1054599007064-mf5rd0qeafftutjciltluh7nkaal48cu.apps.googleusercontent.com'
             ),
           },
         ],
