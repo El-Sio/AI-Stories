@@ -1,0 +1,63 @@
+<h1>Admin Menu</h1>
+
+<div *ngIf="globalLoading" class="loading">Chargement en cours</div>
+<div *ngIf="error" class="error">{{ errortext }}</div>
+
+<h2>User Management</h2>
+
+<span *ngIf="displayUser?.length == 0">
+  <h4>Get Users from Server</h4>
+  <label>User : </label><input type="text" [(ngModel)]="admin_user" />
+  <br />
+  <label>Pasword :</label><input type="password" [(ngModel)]="admin_password" />
+  <button (click)="getUserList()">Get Users</button>
+</span>
+
+<table *ngIf="displayUser?.length != 0">
+  <tr>
+    <th>Name</th>
+    <th>Password</th>
+    <th>Has VIZ</th>
+    <th>Is Admin</th>
+    <th>Action</th>
+  </tr>
+  <tr *ngFor="let us of displayUser">
+    <td><input type="text" [(ngModel)]="us.user" (change)="validate()" /></td>
+    <td>
+      <input type="password" [(ngModel)]="us.password" (change)="hash(us)" />
+    </td>
+    <td>
+      <input
+        type="checkbox"
+        id="{{ us.user }}"
+        name="copy_{{ us.user }}_hasviz"
+        [(ngModel)]="us.hasViz"
+        (change)="validate()"
+      /><label for="{{ us.user }}">has viz</label>
+    </td>
+    <td>
+      <input
+        type="checkbox"
+        id="{{ us.password }}"
+        name="copy_{{ us.user }}_isadmin"
+        [(ngModel)]="us.isAdmin"
+        (change)="validate()"
+      /><label for="{{ us.password }}">is Admin</label>
+    </td>
+    <td><a (click)="userDelete(us)">Delete</a></td>
+  </tr>
+</table>
+<span *ngIf="displayUser?.length != 0">
+  <button (click)="adduser()">Add User</button
+  ><button (click)="cancel()">Cancel Changes</button
+  ><button (click)="save()">Save Changes</button>
+</span>
+
+<button routerLink="/sports">Exit</button>
+
+<div id="toast">
+  <div id="img">
+    <img src="assets/img/{{ toaster_img }}.png" width="40" height="40" />
+  </div>
+  <div id="desc">{{ toaster_message }}</div>
+</div>

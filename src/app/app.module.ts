@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthGuard } from './auth-guard.service';
+import { AdminComponent } from './admin/admin.component';
 
 export function initializeApp(appInitService: AppInitService) {
   return (): Promise<any> => {
@@ -22,6 +23,7 @@ export function initializeApp(appInitService: AppInitService) {
     BrowserModule,
     FormsModule,
     HttpClientModule,
+    AdminComponent,
     RouterModule.forRoot([
       { path: 'login', component: LoginComponent },
       {
