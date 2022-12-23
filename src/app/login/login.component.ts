@@ -27,7 +27,6 @@ export class LoginComponent implements OnInit {
   }
 
   sendCreds() {
-    console.log('coucou');
     this.loading = true;
     const creds = {
       user: this.userName,

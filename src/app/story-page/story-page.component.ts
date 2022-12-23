@@ -4,6 +4,7 @@ import { catchError, retry } from 'rxjs/operators';
 import { OpenaiService } from '../openai.service';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../authentication.service';
+import { AppInitService } from '../app-init.service';
 
 @Component({
   selector: 'app-story-page',
@@ -18,6 +19,8 @@ export class StoryPageComponent implements OnInit {
   public isloading_img = false;
   public isloading_txt = false;
   public illustrated = false;
+  public temperature = 5;
+  public login = AppInitService.currentUser.user;
 
   constructor(
     public openai: OpenaiService,
@@ -41,10 +44,9 @@ export class StoryPageComponent implements OnInit {
       ' pour ' +
       this.storyPurpose;
 
-    this.openai.getCompletion(prompt_txt).subscribe(
+    this.openai.getCompletion(prompt_txt, this.temperature / 10).subscribe(
       (x) => {
         this.story = x.choices[0].text;
-        console.log(this.story);
         this.isloading_txt = false;
       },
       (err) => {

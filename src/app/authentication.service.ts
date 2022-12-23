@@ -26,7 +26,6 @@ export class AuthenticationService {
 
   login(creds: User): Observable<Authent> {
     // Use the POST request of appInitService to get credentials
-    console.log('login en cours');
     return this.openai.login(creds).pipe(
       map((res) => {
         const auth: Authent = {

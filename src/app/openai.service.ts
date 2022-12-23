@@ -36,12 +36,12 @@ export class OpenaiService {
     );
   }
 
-  getCompletion(prompt: string): Observable<Completion> {
+  getCompletion(prompt: string, temp: number): Observable<Completion> {
     let body = {
       model: 'text-davinci-003',
       prompt: prompt,
       max_tokens: 1500,
-      temperature: 0.5,
+      temperature: temp,
     };
     return this.http.post<Completion>(
       'https://api.openai.com/v1/completions',
