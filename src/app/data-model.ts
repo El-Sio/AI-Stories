@@ -26,3 +26,17 @@ export interface Completion {
     total_tokens: number;
   };
 }
+
+export interface User {
+  user: string;
+  password: string;
+}
+
+export interface Authent {
+  user: string;
+  password: string;
+  access: Boolean;
+  isAdmin: Boolean;
+  hasViz: Boolean;
+  message: string;
+}

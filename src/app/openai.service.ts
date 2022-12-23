@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { ImageAI, Completion } from './data-model';
 import { AppInitService } from './app-init.service';
+import { User, Authent } from './data-model';
 
 @Injectable()
 export class OpenaiService {
@@ -25,6 +26,13 @@ export class OpenaiService {
     return this.http.get<JSON>(
       'https://api.openai.com/v1/models',
       this.httpOptions
+    );
+  }
+
+  login(creds: User): Observable<Authent> {
+    return this.http.post<Authent>(
+      'https://japansio.info/api/access.php',
+      JSON.stringify(creds)
     );
   }
 

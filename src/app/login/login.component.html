@@ -1,11 +1,23 @@
 <div>
-  <label>Login</label>
   <form>
+    <label>Login :</label>
     <input
-      (click)="loginWithGoogle()"
-      class="google-login-btn"
-      type="submit"
-      value="Login with Google"
+      type="text"
+      [(ngModel)]="userName"
+      name="name"
+      placeholder=" login"
     />
+    <br />
+    <br />
+    <label>Passsword</label>
+    <input
+      type="password"
+      [(ngModel)]="userPassword"
+      name="password"
+      placeholder="password"
+    />
+    <br />
+    <br />
+    <input type="submit" (click)="sendCreds()" value="Login" />
   </form>
 </div>

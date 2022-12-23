@@ -9,12 +9,7 @@ import { StoryPageComponent } from './story-page/story-page.component';
 import { RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  GoogleLoginProvider,
-  SocialAuthService,
-  SocialLoginModule,
-} from 'angularx-social-login';
-import { AuthGuardService } from './auth-guard.service';
+import { AuthGuard } from './auth-guard.service';
 
 export function initializeApp(appInitService: AppInitService) {
   return (): Promise<any> => {
@@ -32,12 +27,11 @@ export function initializeApp(appInitService: AppInitService) {
       {
         path: 'story',
         component: StoryPageComponent,
-        canActivate: [AuthGuardService],
+        canActivate: [AuthGuard],
       },
       { path: '**', component: LoginComponent },
     ]),
     BrowserAnimationsModule,
-    SocialLoginModule,
   ],
   declarations: [AppComponent, StoryPageComponent],
   bootstrap: [AppComponent],
@@ -51,21 +45,7 @@ export function initializeApp(appInitService: AppInitService) {
     },
     // makes sure to load config before the app initializes
     OpenaiService,
-    {
-      provide: 'SocialAuthServiceConfig',
-      useValue: {
-        autoLogin: true,
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(
-              '1054599007064-mf5rd0qeafftutjciltluh7nkaal48cu.apps.googleusercontent.com'
-            ),
-          },
-        ],
-      },
-    },
-    AuthGuardService,
+    AuthGuard,
   ],
 })
 export class AppModule {}

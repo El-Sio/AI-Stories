@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { OpenaiService } from '../openai.service';
-import { SocialAuthService } from 'angularx-social-login';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,11 +17,7 @@ export class StoryPageComponent implements OnInit {
   public isloading = false;
   public illustrated = false;
 
-  constructor(
-    public openai: OpenaiService,
-    public socialAuthServive: SocialAuthService,
-    public router: Router
-  ) {}
+  constructor(public openai: OpenaiService, public router: Router) {}
 
   generateStory(): void {
     this.isloading = true;
@@ -69,11 +64,7 @@ export class StoryPageComponent implements OnInit {
     }
   }
 
-  logout(): void {
-    this.socialAuthServive
-      .signOut()
-      .then(() => this.router.navigate(['login']));
-  }
+  logout(): void {}
 
   ngOnInit() {}
 }

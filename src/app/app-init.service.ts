@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { User, Authent } from './data-model';
 
 export interface IAppConfig {
   secret: string;
@@ -7,7 +8,9 @@ export interface IAppConfig {
 
 @Injectable()
 export class AppInitService {
+  static currentUser: Authent;
   static settings: IAppConfig;
+
   constructor(private http: HttpClient) {}
 
   load() {

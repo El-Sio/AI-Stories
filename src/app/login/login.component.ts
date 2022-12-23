@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AppInitService } from '../app-init.service';
+import { AuthenticationService } from '../authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -8,18 +9,43 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
+  loading = false;
+  returnUrl: string;
+  error = '';
+  userName = '';
+  userPassword = '';
+
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
-    private socialAuthService: SocialAuthService
+    public authent: AuthenticationService
   ) {}
 
-  loginWithGoogle(): void {
-    console.log('attempting login');
-    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(() => {
-      alert('google a répondu');
-      this.router.navigate(['story']);
-    });
+  ngOnInit() {
+    // get return url from route parameters or default to '/'
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
-  ngOnInit() {}
+  sendCreds() {
+    this.loading = true;
+    const creds = {
+      user: this.userName,
+      password: this.userPassword,
+    };
+    this.authent.login(creds).subscribe(
+      (data) => {
+        this.loading = false;
+        if (data.access) {
+          AppInitService.currentUser = data;
+          this.router.navigate([decodeURIComponent(this.returnUrl)]);
+        } else {
+          this.error = data.message;
+        }
+      },
+      (error) => {
+        this.loading = false;
+        this.error = error.message;
+      }
+    );
+  }
 }
