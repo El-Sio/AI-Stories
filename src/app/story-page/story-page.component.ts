@@ -33,13 +33,13 @@ export class StoryPageComponent implements OnInit {
     this.story = 'Chargement en cours...';
     this.imgsrc = '';
     let prompt_txt =
-      'raconte moi une histoire pour enfant ou fifi et rhino vont ' +
+      'raconte moi une histoire pour enfant dont les héros sont fifi la girafe et rhino le rhinocéros et qui vont ' +
       this.storyPlace +
       ' pour ' +
       this.storyPurpose;
 
     let prompt_img =
-      'illustration de livre pour enfants avec une giraffe et un rhinoceros qui ' +
+      'illustration de livre pour enfants avec une girafe et un rhinoceros qui vont ' +
       this.storyPlace +
       ' pour ' +
       this.storyPurpose;

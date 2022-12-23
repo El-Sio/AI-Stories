@@ -19,8 +19,11 @@
     />
     <br />
     <br />
-    <label>avec illustration :</label>
-    <input type="checkbox" [(ngModel)]="illustrated" name="illustrated" />
+    <label class="container"
+      >avec illustration
+      <input type="checkbox" [(ngModel)]="illustrated" name="illustrated" />
+      <span class="checkmark"></span>
+    </label>
     <br />
     <br />
     <label>Créativité : {{ temperature / 10 }}</label>
