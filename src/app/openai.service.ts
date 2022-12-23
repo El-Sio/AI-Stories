@@ -36,27 +36,6 @@ export class OpenaiService {
     );
   }
 
-  getUsers(user: Authent): Observable<Authent[]> {
-    return this.http.post<Authent[]>(
-      'https://japansio.info/api/getusers.php',
-      JSON.stringify(user)
-    );
-  }
-
-  writeUsers(users: Authent[]): Observable<any> {
-    return this.http.post<any>(
-      'https://japansio.info/api/writeuser.php',
-      JSON.stringify(users)
-    );
-  }
-
-  hashPass(user: Authent): Observable<string> {
-    return this.http.post<string>(
-      'https://japansio.info/api/hash.php',
-      JSON.stringify(user)
-    );
-  }
-
   getCompletion(prompt: string, temp: number): Observable<Completion> {
     let body = {
       model: 'text-davinci-003',
