@@ -76,7 +76,7 @@ input[type='submit']:hover {
 }
 
 img {
-  margin-left: 44px;
+  margin-left: 144px;
 }
 
 div {
@@ -84,7 +84,7 @@ div {
   background-color: #f2f2f2;
   padding: 20px;
   margin-bottom: 20px;
-  width: 600px;
+  width: 800px;
   margin-left: auto;
   margin-right: auto;
   justify-content: center;
