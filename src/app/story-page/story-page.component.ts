@@ -14,6 +14,7 @@ import { AppInitService } from '../app-init.service';
 export class StoryPageComponent implements OnInit {
   public storyPlace = '';
   public storyPurpose = '';
+  public storyCompanion = '';
   public story = 'Votre histoire ici';
   public imgsrc = '';
   public isloading_img = false;
@@ -36,13 +37,16 @@ export class StoryPageComponent implements OnInit {
       'raconte moi une histoire pour enfant dont les héros sont fifi la girafe et rhino le rhinocéros et qui vont ' +
       this.storyPlace +
       ' pour ' +
-      this.storyPurpose;
-
+      this.storyPurpose +
+      ' avec ' +
+      this.storyCompanion;
     let prompt_img =
       'illustration de livre pour enfants avec une girafe et un rhinoceros qui vont ' +
       this.storyPlace +
       ' pour ' +
-      this.storyPurpose;
+      this.storyPurpose +
+      ' avec ' +
+      this.storyCompanion;
 
     this.openai.getCompletion(prompt_txt, this.temperature / 10).subscribe(
       (x) => {
