@@ -33,20 +33,23 @@ export class StoryPageComponent implements OnInit {
     this.isloading_txt = true;
     this.story = 'Chargement en cours...';
     this.imgsrc = '';
+    let companion = '';
+    if (this.storyCompanion) {
+      companion = ' avec ' + this.storyCompanion;
+    }
     let prompt_txt =
       'raconte moi une histoire pour enfant dont les héros sont fifi la girafe et rhino le rhinocéros et qui vont ' +
       this.storyPlace +
       ' pour ' +
       this.storyPurpose +
-      ' avec ' +
-      this.storyCompanion;
+      companion;
+
     let prompt_img =
       'illustration de livre pour enfants avec une girafe et un rhinoceros qui vont ' +
       this.storyPlace +
       ' pour ' +
       this.storyPurpose +
-      ' avec ' +
-      this.storyCompanion;
+      companion;
 
     this.openai.getCompletion(prompt_txt, this.temperature / 10).subscribe(
       (x) => {
