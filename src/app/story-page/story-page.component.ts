@@ -22,6 +22,8 @@ export class StoryPageComponent implements OnInit {
   public illustrated = false;
   public temperature = 5;
   public login = AppInitService.currentUser.user;
+  private token = '';
+  private isAdmin = false;
 
   constructor(
     public openai: OpenaiService,
@@ -53,20 +55,22 @@ export class StoryPageComponent implements OnInit {
 
     console.log(prompt_txt);
 
-    this.openai.getCompletion(prompt_txt, this.temperature / 10).subscribe(
-      (x) => {
-        this.story = x.choices[0].text;
-        this.isloading_txt = false;
-      },
-      (err) => {
-        this.isloading_txt = false;
-        this.story = err.message;
-      }
-    );
+    this.openai
+      .getCompletion(prompt_txt, this.temperature / 10, this.token)
+      .subscribe(
+        (x) => {
+          this.story = x.choices[0].text;
+          this.isloading_txt = false;
+        },
+        (err) => {
+          this.isloading_txt = false;
+          this.story = err.message;
+        }
+      );
 
     if (this.illustrated) {
       this.isloading_img = true;
-      this.openai.getImage(prompt_img).subscribe(
+      this.openai.getImage(prompt_img, this.token).subscribe(
         (x) => {
           this.imgsrc = x.data[0].url;
           console.log(this.imgsrc);
@@ -85,5 +89,10 @@ export class StoryPageComponent implements OnInit {
     this.router.navigate(['login']);
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.token = AppInitService.currentUser.message;
+    if (AppInitService.currentUser.isAdmin) {
+      this.isAdmin = true;
+    }
+  }
 }

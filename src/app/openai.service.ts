@@ -10,56 +10,57 @@ import { User, Authent } from './data-model';
 export class OpenaiService {
   constructor(private http: HttpClient) {}
 
-  private token = AppInitService.settings.secret;
-  private httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + this.token,
-    }),
-  };
-
-  getToken(): Observable<JSON> {
-    return this.http.get<JSON>('https://japansio.info/api/secret.json');
-  }
-
-  testCall(): Observable<JSON> {
-    return this.http.get<JSON>(
-      'https://api.openai.com/v1/models',
-      this.httpOptions
-    );
-  }
-
   login(creds: User): Observable<Authent> {
     return this.http.post<Authent>(
-      'https://japansio.info/api/access.php',
+      AppInitService.settings.Login_URL,
       JSON.stringify(creds)
     );
   }
 
-  getCompletion(prompt: string, temp: number): Observable<Completion> {
+  getCompletion(
+    prompt: string,
+    temp: number,
+    token: string
+  ): Observable<Completion> {
     let body = {
       model: 'text-davinci-003',
       prompt: prompt,
       max_tokens: 2500,
       temperature: temp,
     };
+
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      }),
+    };
+
     return this.http.post<Completion>(
       'https://api.openai.com/v1/completions',
       body,
-      this.httpOptions
+      httpOptions
     );
   }
 
-  getImage(prompt: string): Observable<ImageAI> {
+  getImage(prompt: string, token: string): Observable<ImageAI> {
     let body = {
       prompt: prompt,
       n: 2,
       size: '512x512',
     };
+
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      }),
+    };
+
     return this.http.post<ImageAI>(
       'https://api.openai.com/v1/images/generations',
       body,
-      this.httpOptions
+      httpOptions
     );
   }
 }
