@@ -15,14 +15,11 @@ export class AppInitService {
 
   load() {
     return new Promise<void>((res, rej) => {
-      this.http.get<IAppConfig>('assets/config.json').subscribe((x) => {
-        AppInitService.settings = <IAppConfig>x;
-        console.log('Config Loaded');
-        res();
-      }),
-        (err) => {
-          console.log('could not load the config file');
-        };
+      AppInitService.settings = <IAppConfig>{
+        Login_URL: 'https://japansio.info/api/access.php',
+      };
+      console.log('Config Loaded');
+      res();
     });
   }
 }
