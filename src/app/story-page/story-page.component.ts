@@ -51,6 +51,8 @@ export class StoryPageComponent implements OnInit {
       this.storyPurpose +
       companion;
 
+    console.log(prompt_txt);
+
     this.openai.getCompletion(prompt_txt, this.temperature / 10).subscribe(
       (x) => {
         this.story = x.choices[0].text;
