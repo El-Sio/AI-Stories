@@ -15,13 +15,11 @@ export class AppInitService {
 
   load() {
     return new Promise<void>((res, rej) => {
-      this.http
-        .get<IAppConfig>('https://japansio.info/fifi/fifiConfig.json')
-        .subscribe((x) => {
-          AppInitService.settings = <IAppConfig>x;
-          console.log('Config Loaded');
-          res();
-        }),
+      this.http.get<IAppConfig>('assets/config.json').subscribe((x) => {
+        AppInitService.settings = <IAppConfig>x;
+        console.log('Config Loaded');
+        res();
+      }),
         (err) => {
           console.log('could not load the config file');
         };
