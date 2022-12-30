@@ -14,7 +14,7 @@ export class AppInitService {
   constructor(private http: HttpClient) {}
 
   load() {
-    const jsonFile = `assets/config/config.json`;
+    const jsonFile = `./config.json`;
     return new Promise<void>((res, rej) => {
       this.http.get<IAppConfig>(jsonFile).subscribe((x) => {
         AppInitService.settings = <IAppConfig>x;
