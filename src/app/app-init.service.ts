@@ -14,10 +14,11 @@ export class AppInitService {
   constructor(private http: HttpClient) {}
 
   load() {
-    const jsonFile = `./config.json`;
     return new Promise<void>((res, rej) => {
-      this.http.get<IAppConfig>(jsonFile).subscribe((x) => {
-        AppInitService.settings = <IAppConfig>x;
+      this.http.get<IAppConfig>('assets/config/config.json').subscribe((x) => {
+        AppInitService.settings = <IAppConfig>{
+          Login_URL: 'https://japansio.info/api/access.php',
+        };
         console.log('Config Loaded');
         res();
       }),
