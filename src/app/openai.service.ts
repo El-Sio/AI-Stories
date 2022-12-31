@@ -43,6 +43,13 @@ export class OpenaiService {
     );
   }
 
+  putTrainingData(data: string): Observable<any> {
+    return this.http.post(
+      'https://japansio.info/api/putTrainingData.php',
+      data
+    );
+  }
+
   getImage(prompt: string, token: string): Observable<ImageAI> {
     let body = {
       prompt: prompt,

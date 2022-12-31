@@ -62,6 +62,17 @@
   <img *ngIf="imgsrc" src="{{ imgsrc }}" width="512" height="512" />
 </div>
 
+<div *ngIf="admin">
+  <button (click)="editStory()">Améliorer l'histoire</button>
+  <textarea
+    *ngIf="isEditing"
+    [(ngModel)]="EditedStory"
+    name="editedstory"
+  ></textarea>
+  <button (click)="sendFeedback()">Enregistrer l'histoire améliorée</button>
+  <p>{{ message }}</p>
+</div>
+
 <div>
   <p>connecté en tant que : {{ login }}</p>
   <button (click)="logout()">Logout</button>

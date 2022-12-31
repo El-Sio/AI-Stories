@@ -23,7 +23,11 @@ export class StoryPageComponent implements OnInit {
   public temperature = 5;
   public login = AppInitService.currentUser.user;
   private token = '';
-  private isAdmin = false;
+  public admin: Boolean;
+  public isEditing = false;
+  public EditedStory = '';
+  public prompt = '';
+  public message = '';
 
   constructor(
     public openai: OpenaiService,
@@ -54,6 +58,7 @@ export class StoryPageComponent implements OnInit {
       companion;
 
     console.log(prompt_txt);
+    this.prompt = prompt_txt;
 
     this.openai
       .getCompletion(prompt_txt, this.temperature / 10, this.token)
@@ -89,10 +94,28 @@ export class StoryPageComponent implements OnInit {
     this.router.navigate(['login']);
   }
 
+  editStory(): void {
+    this.isEditing = !this.isEditing;
+    this.EditedStory = this.story;
+  }
+
+  sendFeedback(): void {
+    let body = {
+      prompt: this.prompt,
+      completion: this.EditedStory,
+    };
+    this.openai.putTrainingData(JSON.stringify(body)).subscribe(
+      (res) => {
+        this.message = 'Success';
+      },
+      (err) => {
+        this.message = 'Error ' + err.message;
+      }
+    );
+  }
+
   ngOnInit() {
     this.token = AppInitService.currentUser.message;
-    if (AppInitService.currentUser.isAdmin) {
-      this.isAdmin = true;
-    }
+    this.admin = AppInitService.currentUser.isAdmin;
   }
 }
