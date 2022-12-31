@@ -28,6 +28,7 @@ export class StoryPageComponent implements OnInit {
   public EditedStory = '';
   public prompt = '';
   public message = '';
+  public completed = false;
 
   constructor(
     public openai: OpenaiService,
@@ -51,10 +52,10 @@ export class StoryPageComponent implements OnInit {
       companion;
 
     let prompt_img =
-      'illustration de livre pour enfants avec une girafe et un rhinoceros qui vont ' +
-      this.storyPlace +
-      ' pour ' +
+      'illustration de livre pour enfants avec une girafe et un rhinocéros en train de ' +
       this.storyPurpose +
+      ' ' +
+      this.storyPlace +
       companion;
 
     console.log(prompt_txt);
@@ -66,10 +67,12 @@ export class StoryPageComponent implements OnInit {
         (x) => {
           this.story = x.choices[0].text;
           this.isloading_txt = false;
+          this.completed = true;
         },
         (err) => {
           this.isloading_txt = false;
           this.story = err.message;
+          this.completed = true;
         }
       );
 
@@ -106,12 +109,26 @@ export class StoryPageComponent implements OnInit {
     };
     this.openai.putTrainingData(JSON.stringify(body)).subscribe(
       (res) => {
-        this.message = 'Success';
+        this.message = 'Histoire enregistrée, merci de votre aide !';
+        this.isEditing = false;
       },
       (err) => {
         this.message = 'Error ' + err.message;
       }
     );
+  }
+
+  reset(): void {
+    this.isEditing = false;
+    this.completed = false;
+    this.story = '';
+    this.storyPlace = '';
+    this.storyPurpose = '';
+    this.storyCompanion = '';
+    this.prompt = '';
+    this.illustrated = false;
+    this.message = '';
+    this.EditedStory = '';
   }
 
   ngOnInit() {

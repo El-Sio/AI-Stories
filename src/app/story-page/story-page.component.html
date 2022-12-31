@@ -49,7 +49,20 @@
     />
     <br />
     <br />
-    <input type="submit" (click)="generateStory()" value="Créer une histoire" />
+    <input
+      type="submit"
+      (click)="generateStory()"
+      value="Créer une histoire"
+      [disabled]="completed || isloading_txt"
+    />
+    <br />
+    <br />
+    <input
+      type="submit"
+      (click)="reset()"
+      value="Recommencer"
+      [disabled]="!completed"
+    />
   </form>
 </div>
 <div>
@@ -57,19 +70,23 @@
   <p>{{ story }}</p>
 </div>
 
-<div *ngIf="imgsrc">
+<div *ngIf="illustrated">
   <div *ngIf="isloading_img" id="loading"></div>
   <img *ngIf="imgsrc" src="{{ imgsrc }}" width="512" height="512" />
 </div>
 
 <div *ngIf="admin">
-  <button (click)="editStory()">Améliorer l'histoire</button>
+  <button (click)="editStory()" [disabled]="isEditing || !completed">
+    Améliorer l'histoire
+  </button>
   <textarea
     *ngIf="isEditing"
     [(ngModel)]="EditedStory"
     name="editedstory"
   ></textarea>
-  <button (click)="sendFeedback()">Enregistrer l'histoire améliorée</button>
+  <button (click)="sendFeedback()" [disabled]="!isEditing">
+    Enregistrer l'histoire améliorée
+  </button>
   <p>{{ message }}</p>
 </div>
 
