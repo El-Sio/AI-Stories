@@ -49,20 +49,12 @@
     />
     <br />
     <br />
-    <input
-      type="submit"
-      (click)="generateStory()"
-      value="Créer une histoire"
-      [disabled]="completed || isloading_txt"
-    />
+    <button (click)="generateStory()" [disabled]="completed || isloading_txt">
+      Créer une histoire
+    </button>
     <br />
     <br />
-    <input
-      type="submit"
-      (click)="reset()"
-      value="Recommencer"
-      [disabled]="!completed"
-    />
+    <button (click)="reset()" [disabled]="!completed">Recommencer</button>
   </form>
 </div>
 <div>
