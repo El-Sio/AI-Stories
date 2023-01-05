@@ -50,6 +50,13 @@ export class OpenaiService {
     );
   }
 
+  overwriteTrainingData(data: string): Observable<any> {
+    return this.http.post(
+      'https://japansio.info/api/overwriteTrainingData.php',
+      data
+    );
+  }
+
   getTrainingData(): Observable<TraningData[]> {
     return this.http.get<TraningData[]>(
       'https://japansio.info/api/getTrainingData.php'

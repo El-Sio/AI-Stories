@@ -11,7 +11,7 @@
   <button (click)="getTrainingData()" [disabled]="isloading || complete">
     Récupérer les données de training
   </button>
-  <button (click)="saveTrainingData()" [disabled]="!complete">
+  <button *ngIf="complete" (click)="saveTrainingData()" [disabled]="!changed">
     Enregistrer les données de training
   </button>
   <br />

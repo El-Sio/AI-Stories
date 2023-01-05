@@ -18,6 +18,7 @@ export class AdminComponent implements OnInit {
   public editingList: boolean[] = [];
   public trainingDataSet: TraningData[] = [];
   public message = '';
+  public changed = false;
 
   constructor(
     public openai: OpenaiService,
@@ -32,15 +33,39 @@ export class AdminComponent implements OnInit {
 
   toggle(i: number): void {
     this.editingList[i] = !this.editingList[i];
+    this.changed = true;
+    this.message = 'données modifiées';
   }
 
-  saveTrainingData(): void {}
+  arrayToJsonLines(array): string {
+    return array.map(JSON.stringify).join('\n');
+  }
+
+  saveTrainingData(): void {
+    //console.log('input', this.trainingDataSet);
+    let newTrainingData = this.arrayToJsonLines(this.trainingDataSet);
+    //console.log('output', newTrainingData);
+    this.openai.overwriteTrainingData(newTrainingData).subscribe(
+      (res) => {
+        this.message = 'Données enregistrées, merci de votre aide !';
+        this.trainingDataSet = [];
+        this.changed = false;
+        this.complete = false;
+      },
+      (err) => {
+        this.message = err.message;
+      }
+    );
+    this.changed = false;
+  }
 
   getTrainingData(): void {
+    this.message = '';
     this.openai.getTrainingData().subscribe(
       (res) => {
         this.isloading = false;
         this.complete = true;
+        this.message = 'données reçues';
         let truncated = res.slice(0, -1);
         this.trainingDataSet = truncated;
         truncated.forEach((x, i) => (this.editingList[i] = false));
