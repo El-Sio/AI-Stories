@@ -22,8 +22,9 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    console.log('init login');
     // get return url from route parameters or default to '/'
-    this.returnUrl = '/story';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
   sendCreds() {

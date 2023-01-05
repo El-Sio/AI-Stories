@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthGuard } from './auth-guard.service';
+import { AdminComponent } from './admin/admin.component';
 
 export function initializeApp(appInitService: AppInitService) {
   return (): Promise<any> => {
@@ -29,11 +30,21 @@ export function initializeApp(appInitService: AppInitService) {
         component: StoryPageComponent,
         canActivate: [AuthGuard],
       },
+      {
+        path: 'admin',
+        component: AdminComponent,
+        canActivate: [AuthGuard],
+      },
       { path: '**', component: LoginComponent },
     ]),
     BrowserAnimationsModule,
   ],
-  declarations: [AppComponent, StoryPageComponent, LoginComponent],
+  declarations: [
+    AppComponent,
+    StoryPageComponent,
+    LoginComponent,
+    AdminComponent,
+  ],
   bootstrap: [AppComponent],
   providers: [
     AppInitService,
