@@ -14,6 +14,11 @@ export interface ImageAI {
   ];
 }
 
+export interface TraningData {
+  prompt: string;
+  completion: string;
+}
+
 export interface Completion {
   id: string;
   object: string;

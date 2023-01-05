@@ -24,11 +24,10 @@ export class StoryPageComponent implements OnInit {
   public login = AppInitService.currentUser.user;
   private token = '';
   public admin: Boolean;
-  public isEditing = false;
-  public EditedStory = '';
   public prompt = '';
   public message = '';
   public completed = false;
+  public saved = false;
 
   constructor(
     public openai: OpenaiService,
@@ -97,20 +96,15 @@ export class StoryPageComponent implements OnInit {
     this.router.navigate(['login']);
   }
 
-  editStory(): void {
-    this.isEditing = !this.isEditing;
-    this.EditedStory = this.story;
-  }
-
   sendFeedback(): void {
     let body = {
       prompt: this.prompt,
-      completion: this.EditedStory,
+      completion: this.story,
     };
     this.openai.putTrainingData(JSON.stringify(body)).subscribe(
       (res) => {
         this.message = 'Histoire enregistrée, merci de votre aide !';
-        this.isEditing = false;
+        this.saved = true;
       },
       (err) => {
         this.message = 'Error ' + err.message;
@@ -119,7 +113,6 @@ export class StoryPageComponent implements OnInit {
   }
 
   reset(): void {
-    this.isEditing = false;
     this.completed = false;
     this.story = '';
     this.storyPlace = '';
@@ -128,7 +121,10 @@ export class StoryPageComponent implements OnInit {
     this.prompt = '';
     this.illustrated = false;
     this.message = '';
-    this.EditedStory = '';
+  }
+
+  gotoAdmin(): void {
+    this.router.navigate(['admin']);
   }
 
   ngOnInit() {

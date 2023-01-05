@@ -1,0 +1,35 @@
+<meta name="viewport" content="widthe=device-width,user-scalable=no" />
+<h1>Les histoires de Fifi et Rhino</h1>
+<br />
+<h2>Admin Page</h2>
+
+<div>
+  <button routerLink="/story">Revenir aux histoires</button>
+</div>
+
+<div>
+  <button (click)="getTrainingData()" [disabled]="isloading || complete">
+    Récupérer les données de training
+  </button>
+  <button (click)="saveTrainingData()" [disabled]="!complete">
+    Enregistrer les données de training
+  </button>
+  <br />
+  <p>{{ message }}</p>
+</div>
+
+<ul>
+  <li *ngFor="let train of trainingDataSet; let i = index">
+    <div>
+      <textarea
+        [disabled]="!editingList[i]"
+        [(ngModel)]="train.completion"
+      ></textarea>
+      <br />
+      <button [disabled]="editingList[i]" (click)="toggle(i)">Modifier</button>
+      <button [disabled]="!editingList[i]" (click)="toggle(i)">
+        Enregistrer
+      </button>
+    </div>
+  </li>
+</ul>

@@ -68,18 +68,11 @@
 </div>
 
 <div *ngIf="admin">
-  <button (click)="editStory()" [disabled]="isEditing || !completed">
-    Améliorer l'histoire
-  </button>
-  <textarea
-    *ngIf="isEditing"
-    [(ngModel)]="EditedStory"
-    name="editedstory"
-  ></textarea>
-  <button (click)="sendFeedback()" [disabled]="!isEditing">
-    Enregistrer l'histoire améliorée
+  <button (click)="sendFeedback()" [disabled]="!completed || saved">
+    Enregistrer l'histoire
   </button>
   <p>{{ message }}</p>
+  <button (click)="gotoAdmin()">Admininistrer</button>
 </div>
 
 <div>

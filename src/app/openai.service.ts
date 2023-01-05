@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
-import { ImageAI, Completion } from './data-model';
+import { ImageAI, Completion, TraningData } from './data-model';
 import { AppInitService } from './app-init.service';
 import { User, Authent } from './data-model';
 
@@ -47,6 +47,12 @@ export class OpenaiService {
     return this.http.post(
       'https://japansio.info/api/putTrainingData.php',
       data
+    );
+  }
+
+  getTrainingData(): Observable<TraningData[]> {
+    return this.http.get<TraningData[]>(
+      'https://japansio.info/api/getTrainingData.php'
     );
   }
 
