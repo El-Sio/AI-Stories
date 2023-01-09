@@ -3,7 +3,7 @@ import { OpenaiService } from '../openai.service';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../authentication.service';
 import { AppInitService } from '../app-init.service';
-import { ImageAI, Completion, TraningData } from '../data-model';
+import { ImageAI, Completion, TraningData, TrainingFiles } from '../data-model';
 
 @Component({
   selector: 'app-admin',
@@ -18,7 +18,12 @@ export class AdminComponent implements OnInit {
   public editingList: boolean[] = [];
   public trainingDataSet: TraningData[] = [];
   public message = '';
+  public fileMessage = '';
   public changed = false;
+  public isloadingfiles = false;
+  public completefile = false;
+  public completeupload = false;
+  public myFiles: TrainingFiles[] = [];
 
   constructor(
     public openai: OpenaiService,
@@ -57,6 +62,47 @@ export class AdminComponent implements OnInit {
       }
     );
     this.changed = false;
+  }
+
+  getTrainingFiles(): void {
+    this.isloadingfiles = true;
+    this.openai.getFiles(this.token).subscribe(
+      (res) => {
+        console.log(res);
+        if (res.length) {
+          this.myFiles = res;
+          this.isloadingfiles = false;
+          this.completefile = true;
+        } else {
+          this.fileMessage = 'Aucun fichier disponible...';
+          this.isloadingfiles = false;
+          this.completefile = false;
+        }
+      },
+      (err) => {
+        this.fileMessage = err.message;
+        this.isloadingfiles = false;
+      }
+    );
+  }
+
+  uploadTrainingFile(): void {
+    this.isloadingfiles = true;
+    this.fileMessage = '';
+    this.completeupload = false;
+    let newTrainingData = this.arrayToJsonLines(this.trainingDataSet);
+    this.openai.UploadFile(this.token).subscribe(
+      (res) => {
+        console.log(res);
+        this.myFiles.push(res);
+        this.isloadingfiles = false;
+        this.completefile = true;
+      },
+      (err) => {
+        this.fileMessage = err.message;
+        this.isloadingfiles = false;
+      }
+    );
   }
 
   getTrainingData(): void {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
-import { ImageAI, Completion, TraningData } from './data-model';
+import { ImageAI, Completion, TraningData, TrainingFiles } from './data-model';
 import { AppInitService } from './app-init.service';
 import { User, Authent } from './data-model';
 
@@ -14,6 +14,39 @@ export class OpenaiService {
     return this.http.post<Authent>(
       AppInitService.settings.Login_URL,
       JSON.stringify(creds)
+    );
+  }
+
+  getFiles(token: string): Observable<TrainingFiles[]> {
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      }),
+    };
+
+    return this.http.get<TrainingFiles[]>(
+      'https://api.openai.com/v1/files',
+      httpOptions
+    );
+  }
+
+  UploadFile(token: string): Observable<TrainingFiles> {
+    let body = {
+      file: 'https://japansio.info/api/training_data.jsonl',
+      purpose: 'fine-tune',
+    };
+
+    let httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: 'Bearer ' + token,
+      }),
+    };
+
+    return this.http.post<TrainingFiles>(
+      'https://api.openai.com/v1/files',
+      body,
+      httpOptions
     );
   }
 

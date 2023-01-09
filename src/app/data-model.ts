@@ -14,6 +14,15 @@ export interface ImageAI {
   ];
 }
 
+export interface TrainingFiles {
+  id: string;
+  object: string;
+  bytes: number;
+  created_at: number;
+  filename: string;
+  purpose: string;
+}
+
 export interface TraningData {
   prompt: string;
   completion: string;

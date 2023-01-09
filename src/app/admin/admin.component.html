@@ -8,6 +8,32 @@
 </div>
 
 <div>
+  <button
+    (click)="getTrainingFiles()"
+    [disabled]="isloadingfiles || completefile"
+  >
+    Lister les fichiers disponibles
+  </button>
+
+  <button
+    (click)="uploadTrainingFile()"
+    [disabled]="isloadingfiles || !complete"
+  >
+    Uploader le fichier courant
+  </button>
+
+  <p>{{ fileMessage }}</p>
+</div>
+
+<ul>
+  <li *ngFor="let file of myFiles">
+    <div>
+      <p>{{ file.id }} - {{ file.filename }} ({{ file.created_at | date }})</p>
+    </div>
+  </li>
+</ul>
+
+<div>
   <button (click)="getTrainingData()" [disabled]="isloading || complete">
     Récupérer les données de training
   </button>
