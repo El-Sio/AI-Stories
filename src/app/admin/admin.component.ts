@@ -90,7 +90,6 @@ export class AdminComponent implements OnInit {
     this.isloadingfiles = true;
     this.fileMessage = '';
     this.completeupload = false;
-    let newTrainingData = this.arrayToJsonLines(this.trainingDataSet);
     this.openai.UploadFile(this.token).subscribe(
       (res) => {
         console.log(res);

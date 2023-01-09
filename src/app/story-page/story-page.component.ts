@@ -121,6 +121,7 @@ export class StoryPageComponent implements OnInit {
     this.prompt = '';
     this.illustrated = false;
     this.message = '';
+    this.saved = false;
   }
 
   gotoAdmin(): void {
