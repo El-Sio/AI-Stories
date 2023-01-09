@@ -50,6 +50,19 @@ export class OpenaiService {
     );
   }
 
+  DeleteFile(token: string, id: string): Observable<any> {
+    let httpOptions = {
+      headers: new HttpHeaders({
+        Authorization: 'Bearer ' + token,
+      }),
+    };
+
+    return this.http.delete(
+      'https://api.openai.com/v1/files' + id,
+      httpOptions
+    );
+  }
+
   getCompletion(
     prompt: string,
     temp: number,

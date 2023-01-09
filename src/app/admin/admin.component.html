@@ -29,6 +29,7 @@
   <li *ngFor="let file of myFiles">
     <div>
       <p>{{ file.id }} - {{ file.filename }} ({{ file.created_at | date }})</p>
+      <a (click)="deleteTrainingFile(file.id)">(delete)</a>
     </div>
   </li>
 </ul>

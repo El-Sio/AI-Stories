@@ -105,6 +105,17 @@ export class AdminComponent implements OnInit {
     );
   }
 
+  deleteTrainingFile(id: string): void {
+    this.openai.DeleteFile(this.token, id).subscribe(
+      (res) => {
+        this.message = 'file ' + res.id + 'was deleted :' + res.deleted;
+      },
+      (err) => {
+        this.fileMessage = err.message;
+      }
+    );
+  }
+
   getTrainingData(): void {
     this.message = '';
     this.openai.getTrainingData().subscribe(
