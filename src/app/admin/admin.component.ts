@@ -13,6 +13,7 @@ import { ImageAI, Completion, TraningData, TrainingFiles } from '../data-model';
 export class AdminComponent implements OnInit {
   isloading = false;
   complete = false;
+  public login = '';
   private token = '';
   public admin: Boolean;
   public editingList: boolean[] = [];
@@ -34,6 +35,7 @@ export class AdminComponent implements OnInit {
   ngOnInit() {
     this.token = AppInitService.currentUser.message;
     this.admin = AppInitService.currentUser.isAdmin;
+    this.login = AppInitService.currentUser.user;
   }
 
   toggle(i: number): void {
@@ -44,6 +46,11 @@ export class AdminComponent implements OnInit {
 
   arrayToJsonLines(array): string {
     return array.map(JSON.stringify).join('\n');
+  }
+
+  logout(): void {
+    this.authent.logout();
+    this.router.navigate(['login']);
   }
 
   saveTrainingData(): void {
