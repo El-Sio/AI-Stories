@@ -14,11 +14,17 @@ export interface ImageAI {
   ];
 }
 
+export interface FilreResponse {
+  object: string;
+  data: TrainingFiles[];
+}
+
 export interface TrainingFiles {
   id: string;
   object: string;
   bytes: number;
   created_at: number;
+  created_date: Date;
   filename: string;
   purpose: string;
 }

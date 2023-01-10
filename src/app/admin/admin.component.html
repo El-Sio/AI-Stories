@@ -7,6 +7,27 @@
   <button routerLink="/story">Revenir aux histoires</button>
 </div>
 
+<h2>Fichiers de Training Uplodés</h2>
+
+<div>
+  <div *ngIf="isloadingfiles" id="loading"></div>
+  <table>
+    <tr>
+      <th>File ID</th>
+      <th>File Name</th>
+      <th>Created at</th>
+      <th>Action</th>
+    </tr>
+    <tr *ngFor="let file of myFiles">
+      <td>{{ file.id }}</td>
+      <td>{{ file.filename }}</td>
+      <td>{{ file.created_date | date: 'dd/MM/yy HH:mm' }}</td>
+      <td><a (click)="deleteTrainingFile(file.id)">Supprimer</a></td>
+    </tr>
+  </table>
+  <p>{{ fileMessage }}</p>
+</div>
+
 <div>
   <button
     (click)="getTrainingFiles()"
@@ -21,18 +42,9 @@
   >
     Uploader le fichier courant
   </button>
-
-  <p>{{ fileMessage }}</p>
 </div>
 
-<ul>
-  <li *ngFor="let file of myFiles">
-    <div>
-      <p>{{ file.id }} - {{ file.filename }} ({{ file.created_at | date }})</p>
-      <a (click)="deleteTrainingFile(file.id)">(delete)</a>
-    </div>
-  </li>
-</ul>
+<h2>Données de training sur le serveur</h2>
 
 <div>
   <button (click)="getTrainingData()" [disabled]="isloading || complete">
@@ -44,6 +56,8 @@
   <br />
   <p>{{ message }}</p>
 </div>
+
+<div *ngIf="isloading" id="loading"></div>
 
 <ul>
   <li *ngFor="let train of trainingDataSet; let i = index">

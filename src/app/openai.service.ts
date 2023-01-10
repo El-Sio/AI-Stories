@@ -2,7 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
-import { ImageAI, Completion, TraningData, TrainingFiles } from './data-model';
+import {
+  ImageAI,
+  Completion,
+  TraningData,
+  TrainingFiles,
+  FilreResponse,
+} from './data-model';
 import { AppInitService } from './app-init.service';
 import { User, Authent } from './data-model';
 
@@ -17,7 +23,7 @@ export class OpenaiService {
     );
   }
 
-  getFiles(token: string): Observable<TrainingFiles[]> {
+  getFiles(token: string): Observable<FilreResponse> {
     let httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -25,17 +31,21 @@ export class OpenaiService {
       }),
     };
 
-    return this.http.get<TrainingFiles[]>(
+    return this.http.get<FilreResponse>(
       'https://api.openai.com/v1/files',
       httpOptions
     );
   }
 
-  UploadFile(token: string): Observable<TrainingFiles> {
-    let body = {
-      file: 'https://japansio.info/api/training_data.jsonl',
-      purpose: 'fine-tune',
-    };
+  UploadFile(token: string, file: string): Observable<TrainingFiles> {
+    let fileblob = new Blob([file], {
+      type: 'text/plain; charset=utf8',
+    });
+
+    let body = new FormData();
+
+    body.append('purpose', 'fine-tune');
+    body.append('file', fileblob, 'myTrainingFile.jsonl');
 
     let httpOptions = {
       headers: new HttpHeaders({
@@ -59,7 +69,7 @@ export class OpenaiService {
     };
 
     return this.http.delete(
-      'https://api.openai.com/v1/files' + id,
+      'https://api.openai.com/v1/files/' + id,
       httpOptions
     );
   }

@@ -66,11 +66,15 @@ export class AdminComponent implements OnInit {
 
   getTrainingFiles(): void {
     this.isloadingfiles = true;
+    this.fileMessage = '';
     this.openai.getFiles(this.token).subscribe(
       (res) => {
         console.log(res);
-        if (res.length) {
-          this.myFiles = res;
+        if (res.data.length) {
+          this.myFiles = res.data;
+          this.myFiles.forEach(
+            (f) => (f.created_date = new Date(f.created_at * 1000))
+          );
           this.isloadingfiles = false;
           this.completefile = true;
         } else {
@@ -90,9 +94,9 @@ export class AdminComponent implements OnInit {
     this.isloadingfiles = true;
     this.fileMessage = '';
     this.completeupload = false;
-    this.openai.UploadFile(this.token).subscribe(
+    let newTrainingData = this.arrayToJsonLines(this.trainingDataSet);
+    this.openai.UploadFile(this.token, newTrainingData).subscribe(
       (res) => {
-        console.log(res);
         this.myFiles.push(res);
         this.isloadingfiles = false;
         this.completefile = true;
@@ -100,14 +104,21 @@ export class AdminComponent implements OnInit {
       (err) => {
         this.fileMessage = err.message;
         this.isloadingfiles = false;
+        this.completefile = false;
       }
     );
   }
 
   deleteTrainingFile(id: string): void {
+    this.isloadingfiles = true;
     this.openai.DeleteFile(this.token, id).subscribe(
       (res) => {
-        this.message = 'file ' + res.id + 'was deleted :' + res.deleted;
+        this.myFiles = this.myFiles.filter((f) => {
+          f.id !== id;
+        });
+        this.fileMessage = 'file ' + res.id + 'was deleted :' + res.deleted;
+        this.isloadingfiles = false;
+        this.completefile = false;
       },
       (err) => {
         this.fileMessage = err.message;

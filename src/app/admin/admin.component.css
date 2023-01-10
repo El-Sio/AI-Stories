@@ -6,6 +6,39 @@ body {
   color: white;
 }
 
+a {
+  text-decoration: none;
+  cursor: hand;
+  color: #ec3655;
+}
+
+a:visited {
+  color: #ec3655;
+}
+
+table {
+  font: 1em 'verdana';
+  font-weight: bold;
+  color: black;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table,
+th,
+td {
+  border: 1px solid white;
+  vertical-align: middle;
+  text-align: center;
+  padding: 5px;
+}
+
+table,
+th,
+td .card {
+  border: none;
+}
+
 ul {
   list-style-type: none;
   margin: 0;
