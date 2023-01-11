@@ -16,9 +16,12 @@ a:visited {
   color: #ec3655;
 }
 
+#train {
+  color: #2196f3;
+}
+
 table {
-  font: 1em 'verdana';
-  font-weight: bold;
+  font: 0.8em 'verdana';
   color: black;
   border-collapse: collapse;
   width: 100%;

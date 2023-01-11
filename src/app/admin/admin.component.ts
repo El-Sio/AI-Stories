@@ -104,7 +104,16 @@ export class AdminComponent implements OnInit {
     let newTrainingData = this.arrayToJsonLines(this.trainingDataSet);
     this.openai.UploadFile(this.token, newTrainingData).subscribe(
       (res) => {
-        this.myFiles.push(res);
+        let newfile = {
+          id: res.id,
+          created_at: res.created_at,
+          created_date: new Date(res.created_at * 1000),
+          bytes: res.bytes,
+          filename: res.filename,
+          purpose: res.purpose,
+          object: res.object,
+        };
+        this.myFiles.push(newfile);
         this.isloadingfiles = false;
         this.completefile = true;
       },
@@ -116,16 +125,15 @@ export class AdminComponent implements OnInit {
     );
   }
 
-  deleteTrainingFile(id: string): void {
+  deleteTrainingFile(idtoremove: string): void {
     this.isloadingfiles = true;
-    this.openai.DeleteFile(this.token, id).subscribe(
+    this.openai.DeleteFile(this.token, idtoremove).subscribe(
       (res) => {
-        this.myFiles = this.myFiles.filter((f) => {
-          f.id !== id;
-        });
-        this.fileMessage = 'file ' + res.id + 'was deleted :' + res.deleted;
         this.isloadingfiles = false;
         this.completefile = false;
+        this.myFiles = this.myFiles.filter((f) => f.id !== idtoremove);
+        this.fileMessage =
+          'Le fichier suivant : ' + res.id + ' a été supprimé.';
       },
       (err) => {
         this.fileMessage = err.message;
@@ -151,4 +159,6 @@ export class AdminComponent implements OnInit {
       }
     );
   }
+
+  StartTrainingJob(file: string): void {}
 }

@@ -7,6 +7,8 @@
   <button routerLink="/story">Revenir aux histoires</button>
 </div>
 
+<br />
+
 <h2>Fichiers de Training Uplodés</h2>
 
 <div>
@@ -16,13 +18,14 @@
       <th>File ID</th>
       <th>File Name</th>
       <th>Created at</th>
-      <th>Action</th>
+      <th colspan="2">Actions</th>
     </tr>
     <tr *ngFor="let file of myFiles">
       <td>{{ file.id }}</td>
       <td>{{ file.filename }}</td>
       <td>{{ file.created_date | date: 'dd/MM/yy HH:mm' }}</td>
       <td><a (click)="deleteTrainingFile(file.id)">Supprimer</a></td>
+      <td><a id="train" (click)="StartTrainingJob(file.id)">Entrainer</a></td>
     </tr>
   </table>
   <p>{{ fileMessage }}</p>
@@ -43,6 +46,8 @@
     Uploader le fichier courant
   </button>
 </div>
+
+<br />
 
 <h2>Données de training sur le serveur</h2>
 

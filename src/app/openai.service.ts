@@ -38,6 +38,8 @@ export class OpenaiService {
   }
 
   UploadFile(token: string, file: string): Observable<TrainingFiles> {
+    let timestamp = new Date().getTime().toString();
+    let filename = 'myTrainingFile_' + timestamp + '.jsonl';
     let fileblob = new Blob([file], {
       type: 'text/plain; charset=utf8',
     });
@@ -45,7 +47,7 @@ export class OpenaiService {
     let body = new FormData();
 
     body.append('purpose', 'fine-tune');
-    body.append('file', fileblob, 'myTrainingFile.jsonl');
+    body.append('file', fileblob, filename);
 
     let httpOptions = {
       headers: new HttpHeaders({
