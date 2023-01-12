@@ -90,9 +90,6 @@ export class AdminComponent implements OnInit {
       (res) => {
         if (res.data.length) {
           this.myFiles = res.data;
-          this.myFiles.forEach(
-            (f) => (f.created_date = new Date(f.created_at * 1000))
-          );
           this.isloadingfiles = false;
           this.completefile = true;
         } else {
@@ -118,7 +115,6 @@ export class AdminComponent implements OnInit {
         let newfile = {
           id: res.id,
           created_at: res.created_at,
-          created_date: new Date(res.created_at * 1000),
           bytes: res.bytes,
           filename: res.filename,
           purpose: res.purpose,

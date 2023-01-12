@@ -52,7 +52,6 @@ export interface TrainingFiles {
   object: string;
   bytes: number;
   created_at: number;
-  created_date: Date;
   filename: string;
   purpose: string;
 }
