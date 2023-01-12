@@ -3,7 +3,13 @@ import { OpenaiService } from '../openai.service';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../authentication.service';
 import { AppInitService } from '../app-init.service';
-import { ImageAI, Completion, TraningData, TrainingFiles } from '../data-model';
+import {
+  ImageAI,
+  Completion,
+  TraningData,
+  TrainingFiles,
+  FineTune,
+} from '../data-model';
 
 @Component({
   selector: 'app-admin',
@@ -25,6 +31,12 @@ export class AdminComponent implements OnInit {
   public completefile = false;
   public completeupload = false;
   public myFiles: TrainingFiles[] = [];
+  public isloadingFineTunes = false;
+  public myFineTunes: FineTune[] = [];
+  public completefinetune = false;
+  public finetunemessage = '';
+  public jobDetail: FineTune;
+  isjobvisible = false;
 
   constructor(
     public openai: OpenaiService,
@@ -76,7 +88,6 @@ export class AdminComponent implements OnInit {
     this.fileMessage = '';
     this.openai.getFiles(this.token).subscribe(
       (res) => {
-        console.log(res);
         if (res.data.length) {
           this.myFiles = res.data;
           this.myFiles.forEach(
@@ -160,5 +171,77 @@ export class AdminComponent implements OnInit {
     );
   }
 
-  StartTrainingJob(file: string): void {}
+  listFineTuneJobs(): void {
+    this.finetunemessage = '';
+    this.isloadingFineTunes = true;
+    this.completefinetune = false;
+
+    this.openai.ListFineTunes(this.token).subscribe(
+      (res) => {
+        if (res.data.length) {
+          this.myFineTunes = res.data;
+          this.isloadingFineTunes = false;
+          this.completefinetune = true;
+        } else {
+          this.finetunemessage = 'aucun job en cours';
+          this.isloadingFineTunes = false;
+          this.completefinetune = true;
+        }
+      },
+      (err) => {
+        this.isloadingFineTunes = false;
+        this.finetunemessage = err.message;
+      }
+    );
+  }
+
+  cancelFineTuneJob(ftid: string) {
+    this.isloadingFineTunes = true;
+    this.finetunemessage = '';
+    this.openai.cancelFineTune(this.token, ftid).subscribe(
+      (res) => {
+        this.isloadingFineTunes = false;
+        this.myFineTunes = this.myFineTunes.filter((f) => f.id !== ftid);
+        this.finetunemessage = 'le job ' + res.id + 'a été annulé';
+      },
+      (err) => {
+        this.isloadingFineTunes = false;
+        this.finetunemessage = err.message;
+      }
+    );
+  }
+
+  getFineTuneDetails(ftid: string): void {
+    this.jobDetail = null;
+    this.isloadingFineTunes = true;
+    this.finetunemessage = '';
+    this.openai.getFineTune(this.token, ftid).subscribe(
+      (res) => {
+        this.isloadingFineTunes = false;
+        this.isjobvisible = true;
+        this.jobDetail = res;
+      },
+      (err) => {
+        this.finetunemessage = err.message;
+      }
+    );
+  }
+
+  closeDetail(): void {
+    this.isjobvisible = false;
+  }
+
+  StartTrainingJob(fid: string): void {
+    this.isloadingfiles = true;
+    this.openai.createFineTUne(this.token, fid).subscribe(
+      (res) => {
+        this.isloadingfiles = false;
+        this.fileMessage = 'Job démarré avec succès avec l‘id : ' + res.id;
+      },
+      (err) => {
+        this.isloadingfiles = false;
+        this.fileMessage = err.message;
+      }
+    );
+  }
 }

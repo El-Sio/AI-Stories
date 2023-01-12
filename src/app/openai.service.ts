@@ -8,6 +8,8 @@ import {
   TraningData,
   TrainingFiles,
   FilreResponse,
+  FineTuneResponse,
+  FineTune,
 } from './data-model';
 import { AppInitService } from './app-init.service';
 import { User, Authent } from './data-model';
@@ -118,6 +120,70 @@ export class OpenaiService {
   getTrainingData(): Observable<TraningData[]> {
     return this.http.get<TraningData[]>(
       'https://japansio.info/api/getTrainingData.php'
+    );
+  }
+
+  ListFineTunes(token: string): Observable<FineTuneResponse> {
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      }),
+    };
+
+    return this.http.get<FineTuneResponse>(
+      'https://api.openai.com/v1/fine-tunes',
+      httpOptions
+    );
+  }
+
+  createFineTUne(token: string, id: string): Observable<FineTune> {
+    let body = {
+      training_file: id,
+      model: 'davinci',
+      suffix: 'fifi',
+    };
+
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      }),
+    };
+
+    return this.http.post<FineTune>(
+      'https://api.openai.com/v1/fine-tunes',
+      body,
+      httpOptions
+    );
+  }
+
+  getFineTune(token: string, ftid: string): Observable<FineTune> {
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      }),
+    };
+
+    return this.http.get<FineTune>(
+      'https://api.openai.com/v1/fine-tunes/' + ftid,
+      httpOptions
+    );
+  }
+
+  cancelFineTune(token: string, ftid: string): Observable<FineTune> {
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      }),
+    };
+
+    return this.http.post<FineTune>(
+      'https://api.openai.com/v1/fine-tunes/' + ftid + '/cancel',
+      '',
+      httpOptions
     );
   }
 

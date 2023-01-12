@@ -49,6 +49,62 @@
 
 <br />
 
+<h2>Jobs d'entrainements en cours</h2>
+
+<div>
+  <div *ngIf="isloadingFineTunes" id="loading"></div>
+  <table>
+    <tr>
+      <th>Job ID</th>
+      <th>Created at</th>
+      <th>Updated at</th>
+      <th>Status</th>
+      <th colspan="2">Actions</th>
+    </tr>
+    <tr *ngFor="let ft of myFineTunes">
+      <td>{{ ft.id }}</td>
+      <td>{{ ft.created_at * 1000 | date: 'dd/MM/yy HH:mm' }}</td>
+      <td>{{ ft.updated_at * 1000 | date: 'dd/MM/yy HH:mm' }}</td>
+      <td>{{ ft.status }}</td>
+      <td><a id="train" (click)="getFineTuneDetails(ft.id)">Details</a></td>
+      <td>
+        <span *ngIf="ft.status !== 'cancelled'">
+          <a (click)="cancelFineTuneJob(ft.id)">Annuler</a>
+        </span>
+        <span *ngIf="ft.status === 'cancelled'">
+          <a id="inactive">Annuler</a>
+        </span>
+      </td>
+    </tr>
+  </table>
+  <p>{{ finetunemessage }}</p>
+</div>
+
+<div *ngIf="jobDetail && isjobvisible">
+  <p>Historique du Job {{ jobDetail.id }}</p>
+  <br />
+  <table>
+    <tr>
+      <th>Date</th>
+      <th>Event</th>
+    </tr>
+    <tr *ngFor="let det of jobDetail.events">
+      <td>{{ det.created_at * 1000 | date: 'dd/MM/yy HH:mm' }}</td>
+      <td>{{ det.message }}</td>
+    </tr>
+  </table>
+  <br />
+  <a (click)="closeDetail()">fermer</a>
+</div>
+
+<div>
+  <button (click)="listFineTuneJobs()" [disabled]="isloadingFineTunes">
+    Lister les Jobs en cours
+  </button>
+</div>
+
+<br />
+
 <h2>Données de training sur le serveur</h2>
 
 <div>

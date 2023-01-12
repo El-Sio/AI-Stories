@@ -14,6 +14,34 @@ export interface ImageAI {
   ];
 }
 
+export interface FineTuneResponse {
+  object: string;
+  data: FineTune[];
+}
+
+export interface FTEvents {
+  object: string;
+  created_at: number;
+  level: string;
+  message: string;
+}
+
+export interface FineTune {
+  id: string;
+  object: string;
+  model: string;
+  created_at: number;
+  fine_tuned_model: string;
+  hyperparams: any;
+  organization_id: string;
+  result_files: any;
+  status: string;
+  validation_files: any;
+  training_files: any;
+  updated_at: number;
+  events: FTEvents[];
+}
+
 export interface FilreResponse {
   object: string;
   data: TrainingFiles[];

@@ -20,6 +20,10 @@ a:visited {
   color: #2196f3;
 }
 
+#inactive {
+  color: dimgrey;
+}
+
 table {
   font: 0.8em 'verdana';
   color: black;
