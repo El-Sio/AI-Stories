@@ -49,15 +49,21 @@
     />
     <br />
     <br />
-    <label>Modèle</label>
-    <select [(ngModel)]="selectedModel" name="selectedmodel">
-      <option *ngFor="let m of Models" [ngValue]="m" name="m.fine_tuned_model">
-        {{ m.fine_tuned_model }}
-      </option>
-    </select>
-    <p>selected Model : {{ selectedModel.fine_tuned_model }}</p>
-    <br />
-    <br />
+    <span *ngIf="admin">
+      <label>Modèle</label>
+      <select [(ngModel)]="selectedModel" name="selectedmodel">
+        <option
+          *ngFor="let m of Models"
+          [ngValue]="m"
+          name="m.fine_tuned_model"
+        >
+          {{ m.fine_tuned_model }}
+        </option>
+      </select>
+      <p>selected Model : {{ selectedModel.fine_tuned_model }}</p>
+      <br />
+      <br />
+    </span>
     <button
       (click)="generateStory()"
       [disabled]="completed || isloading_txt || !modelsloaded"
