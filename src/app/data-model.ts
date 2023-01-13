@@ -14,6 +14,17 @@ export interface ImageAI {
   ];
 }
 
+export interface ModelList {
+  data: Model[];
+}
+
+export interface Model {
+  id: string;
+  object: string;
+  owned_by: string;
+  permission: any;
+}
+
 export interface FineTuneResponse {
   object: string;
   data: FineTune[];

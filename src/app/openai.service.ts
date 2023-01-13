@@ -10,6 +10,8 @@ import {
   FilreResponse,
   FineTuneResponse,
   FineTune,
+  ModelList,
+  Model,
 } from './data-model';
 import { AppInitService } from './app-init.service';
 import { User, Authent } from './data-model';
@@ -80,13 +82,28 @@ export class OpenaiService {
   getCompletion(
     prompt: string,
     temp: number,
-    token: string
+    token: string,
+    model: string
   ): Observable<Completion> {
+    let maxtoken = 0;
+    let stop = null;
+
+    switch (model) {
+      case 'text-davinci-003':
+        maxtoken = 2500;
+        break;
+      default:
+        maxtoken = 1500;
+        stop = 'FIN';
+        break;
+    }
+
     let body = {
-      model: 'text-davinci-003',
+      model: model,
       prompt: prompt,
-      max_tokens: 2500,
+      max_tokens: maxtoken,
       temperature: temp,
+      stop: stop,
     };
 
     let httpOptions = {
@@ -183,6 +200,20 @@ export class OpenaiService {
     return this.http.post<FineTune>(
       'https://api.openai.com/v1/fine-tunes/' + ftid + '/cancel',
       '',
+      httpOptions
+    );
+  }
+
+  getModelList(token: string): Observable<ModelList> {
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      }),
+    };
+
+    return this.http.get<ModelList>(
+      'https://api.openai.com/v1/models',
       httpOptions
     );
   }

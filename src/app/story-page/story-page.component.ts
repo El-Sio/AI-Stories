@@ -5,6 +5,7 @@ import { OpenaiService } from '../openai.service';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../authentication.service';
 import { AppInitService } from '../app-init.service';
+import { FineTune } from '../data-model';
 
 @Component({
   selector: 'app-story-page',
@@ -28,6 +29,25 @@ export class StoryPageComponent implements OnInit {
   public message = '';
   public completed = false;
   public saved = false;
+  public Models: FineTune[] = [
+    {
+      id: 'text-davinci-003',
+      object: 'fine-tune',
+      model: 'text-davinci-003',
+      created_at: 0,
+      fine_tuned_model: 'text-davinci-003',
+      hyperparams: null,
+      organization_id: 'openai',
+      result_files: null,
+      status: 'ok',
+      validation_files: null,
+      training_files: null,
+      updated_at: null,
+      events: null,
+    },
+  ];
+  public selectedModel: FineTune;
+  public modelsloaded = false;
 
   constructor(
     public openai: OpenaiService,
@@ -61,7 +81,12 @@ export class StoryPageComponent implements OnInit {
     this.prompt = prompt_txt;
 
     this.openai
-      .getCompletion(prompt_txt, this.temperature / 10, this.token)
+      .getCompletion(
+        prompt_txt,
+        this.temperature / 10,
+        this.token,
+        this.selectedModel.fine_tuned_model
+      )
       .subscribe(
         (x) => {
           this.story = x.choices[0].text;
@@ -131,5 +156,23 @@ export class StoryPageComponent implements OnInit {
   ngOnInit() {
     this.token = AppInitService.currentUser.message;
     this.admin = AppInitService.currentUser.isAdmin;
+    this.selectedModel = this.Models[0];
+    this.openai.ListFineTunes(this.token).subscribe(
+      (res) => {
+        this.modelsloaded = true;
+
+        res.data.forEach((m) => {
+          if (m.fine_tuned_model) {
+            this.Models.push(m);
+          }
+        });
+
+        this.selectedModel = this.Models[0];
+        console.log(this.Models);
+      },
+      (err) => {
+        this.message = 'could not load models : ' + err.message;
+      }
+    );
   }
 }
