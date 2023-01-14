@@ -32,6 +32,8 @@ export class StoryPageComponent implements OnInit {
   public imgsaved = false;
   public completedimg = false;
   public saved = false;
+  public message_story = '';
+  public allsaved = false;
   public Models: FineTune[] = [
     {
       id: 'text-davinci-003',
@@ -137,6 +139,24 @@ export class StoryPageComponent implements OnInit {
     );
   }
 
+  saveStory(): void {
+    let body = {
+      location: this.storyPlace,
+      purpose: this.storyPurpose,
+      companion: this.storyCompanion,
+      image: this.message_img,
+    };
+    this.openai.putCollectionData(JSON.stringify(body)).subscribe(
+      (res) => {
+        this.message_story = 'Histoire enregistrée, merci de votre aide !';
+        this.allsaved = true;
+      },
+      (err) => {
+        this.message_story = 'Error : ' + err.message;
+      }
+    );
+  }
+
   sendFeedback(): void {
     let body = {
       prompt: this.prompt,
@@ -148,7 +168,7 @@ export class StoryPageComponent implements OnInit {
         this.saved = true;
       },
       (err) => {
-        this.message = 'Error ' + err.message;
+        this.message = 'Error : ' + err.message;
       }
     );
   }

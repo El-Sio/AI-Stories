@@ -127,6 +127,13 @@ export class OpenaiService {
     );
   }
 
+  putCollectionData(data: string): Observable<any> {
+    return this.http.post(
+      'https://japansio.info/api/putCollectionData.php',
+      data
+    );
+  }
+
   overwriteTrainingData(data: string): Observable<any> {
     return this.http.post(
       'https://japansio.info/api/overwriteTrainingData.php',
@@ -137,6 +144,12 @@ export class OpenaiService {
   getTrainingData(): Observable<TraningData[]> {
     return this.http.get<TraningData[]>(
       'https://japansio.info/api/getTrainingData.php'
+    );
+  }
+
+  getCollectionData(): Observable<TraningData[]> {
+    return this.http.get<TraningData[]>(
+      'https://japansio.info/api/getCollectionData.php'
     );
   }
 
