@@ -1,0 +1,39 @@
+<h1>Les histoires de Fifi et Rhino</h1>
+
+<div>
+  <button (click)="getStories()" [disabled]="storyBookLoaded">
+    Récupérer les Histoires
+  </button>
+  <button (click)="gotoStories()">Créer une nouvelle histoire</button>
+</div>
+
+<div *ngIf="storyBookLoading">
+  <div *ngIf="storyBookLoading" id="loading"></div>
+</div>
+
+<span *ngIf="storyBookLoaded">
+  <div>
+    <p>{{ message }}</p>
+  </div>
+  <div>
+    <h2>
+      Fifi et Rhino vont à {{ currStory.location }} pour faire
+      {{ currStory.purpose }}
+      <span *ngIf="currStory?.companion">avec {{ currStory.companion }}</span>
+    </h2>
+    <p>{{ currStory.text }}</p>
+  </div>
+  <div>
+    <img src="{{ currStory.image }}" width="512" height="512" />
+  </div>
+
+  <div>
+    <button (click)="previousStory()" [disabled]="bookStart">
+      Histoire précédente
+    </button>
+    <button (click)="nextStory()" [disabled]="bookEnd">
+      Histoire suivante
+    </button>
+    <button (click)="randomStory()">Histoire au hasard</button>
+  </div>
+</span>

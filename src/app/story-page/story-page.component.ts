@@ -144,6 +144,7 @@ export class StoryPageComponent implements OnInit {
       location: this.storyPlace,
       purpose: this.storyPurpose,
       companion: this.storyCompanion,
+      text: this.story,
       image: this.message_img,
     };
     this.openai.putCollectionData(JSON.stringify(body)).subscribe(
@@ -190,6 +191,10 @@ export class StoryPageComponent implements OnInit {
 
   gotoAdmin(): void {
     this.router.navigate(['admin']);
+  }
+
+  gotoCollection(): void {
+    this.router.navigate(['collection']);
   }
 
   ngOnInit() {

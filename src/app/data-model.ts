@@ -18,6 +18,14 @@ export interface ModelList {
   data: Model[];
 }
 
+export interface completeStory {
+  location: string;
+  purpose: string;
+  companion: string;
+  text: string;
+  image: string;
+}
+
 export interface Model {
   id: string;
   object: string;

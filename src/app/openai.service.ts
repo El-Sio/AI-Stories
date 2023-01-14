@@ -11,7 +11,7 @@ import {
   FineTuneResponse,
   FineTune,
   ModelList,
-  Model,
+  completeStory,
 } from './data-model';
 import { AppInitService } from './app-init.service';
 import { User, Authent } from './data-model';
@@ -147,8 +147,8 @@ export class OpenaiService {
     );
   }
 
-  getCollectionData(): Observable<TraningData[]> {
-    return this.http.get<TraningData[]>(
+  getCollectionData(): Observable<completeStory[]> {
+    return this.http.get<completeStory[]>(
       'https://japansio.info/api/getCollectionData.php'
     );
   }
