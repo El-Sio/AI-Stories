@@ -218,11 +218,22 @@ export class OpenaiService {
     );
   }
 
+  saveImage(data: string): Observable<any> {
+    let body = new FormData();
+    body.append('base64Data', data);
+
+    return this.http.post<any>(
+      'https://japansio.info/fifi/saveimage.php',
+      body
+    );
+  }
+
   getImage(prompt: string, token: string): Observable<ImageAI> {
     let body = {
       prompt: prompt,
       n: 2,
       size: '512x512',
+      response_format: 'b64_json',
     };
 
     let httpOptions = {

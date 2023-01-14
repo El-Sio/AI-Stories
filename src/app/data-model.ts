@@ -9,7 +9,7 @@ export interface ImageAI {
   created: number;
   data: [
     {
-      url: string;
+      b64_json: string;
     }
   ];
 }

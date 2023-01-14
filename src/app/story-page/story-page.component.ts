@@ -27,7 +27,10 @@ export class StoryPageComponent implements OnInit {
   public admin: Boolean;
   public prompt = '';
   public message = '';
+  public message_img = '';
   public completed = false;
+  public imgsaved = false;
+  public completedimg = false;
   public saved = false;
   public Models: FineTune[] = [
     {
@@ -104,9 +107,10 @@ export class StoryPageComponent implements OnInit {
       this.isloading_img = true;
       this.openai.getImage(prompt_img, this.token).subscribe(
         (x) => {
-          this.imgsrc = x.data[0].url;
+          this.imgsrc = x.data[0].b64_json;
           console.log(this.imgsrc);
           this.isloading_img = false;
+          this.completedimg = true;
         },
         (err) => {
           this.isloading_img = false;
@@ -119,6 +123,18 @@ export class StoryPageComponent implements OnInit {
   logout(): void {
     this.authent.logout();
     this.router.navigate(['login']);
+  }
+
+  saveImage(): void {
+    this.openai.saveImage(this.imgsrc).subscribe(
+      (res) => {
+        this.message_img = res.url;
+        this.imgsaved = true;
+      },
+      (err) => {
+        this.message_img = err.message;
+      }
+    );
   }
 
   sendFeedback(): void {
@@ -147,6 +163,9 @@ export class StoryPageComponent implements OnInit {
     this.illustrated = false;
     this.message = '';
     this.saved = false;
+    this.imgsaved = false;
+    this.completedimg = false;
+    this.message_img = '';
   }
 
   gotoAdmin(): void {

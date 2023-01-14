@@ -82,7 +82,12 @@
 
 <div *ngIf="illustrated">
   <div *ngIf="isloading_img" id="loading"></div>
-  <img *ngIf="imgsrc" src="{{ imgsrc }}" width="512" height="512" />
+  <img
+    *ngIf="imgsrc"
+    src="data:image/png;base64,{{ imgsrc }}"
+    width="512"
+    height="512"
+  />
 </div>
 
 <div *ngIf="admin">
@@ -90,6 +95,10 @@
     Enregistrer l'histoire
   </button>
   <p>{{ message }}</p>
+  <button (click)="saveImage()" [disabled]="!completedimg || imgsaved">
+    Enregistrer l'image
+  </button>
+  <p>{{ message_img }}</p>
   <button (click)="gotoAdmin()">Admininistrer</button>
 </div>
 
