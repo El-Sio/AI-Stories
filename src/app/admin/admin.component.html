@@ -132,6 +132,9 @@
       <button [disabled]="!editingList[i]" (click)="toggle(i)">
         Enregistrer
       </button>
+      <button *ngIf="testing" (click)="testFunctions(i)">
+        Convertir histoire {{ i }}
+      </button>
     </div>
   </li>
 </ul>

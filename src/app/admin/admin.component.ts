@@ -4,11 +4,10 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from '../authentication.service';
 import { AppInitService } from '../app-init.service';
 import {
-  ImageAI,
-  Completion,
   TraningData,
   TrainingFiles,
   FineTune,
+  completeStory,
 } from '../data-model';
 
 @Component({
@@ -37,6 +36,7 @@ export class AdminComponent implements OnInit {
   public finetunemessage = '';
   public jobDetail: FineTune;
   isjobvisible = false;
+  testing = false;
 
   constructor(
     public openai: OpenaiService,
@@ -63,6 +63,44 @@ export class AdminComponent implements OnInit {
   logout(): void {
     this.authent.logout();
     this.router.navigate(['login']);
+  }
+
+  storyToTraining(story: completeStory): TraningData {
+    let companion = '';
+    if (story.companion) {
+      companion = ' avec ' + story.companion;
+    }
+    let prompt_txt =
+      'raconte moi une histoire pour enfant dont les héros sont fifi la girafe et rhino le rhinocéros et qui vont ' +
+      story.location +
+      ' pour ' +
+      story.purpose +
+      companion;
+
+    let data = {
+      prompt: prompt_txt,
+      completion: story.text,
+    };
+
+    return data;
+  }
+
+  trainingToStory(training: TraningData): completeStory {
+    let location = training.prompt.split('vont')[1].split('pour')[0];
+    console.log('location ', location);
+    let purpose = training.prompt.split('pour')[2].split('avec')[0];
+    console.log('purpose ', purpose);
+    let companion = training.prompt.split('avec')[1];
+    console.log('companion', companion);
+
+    let story = {
+      location: location,
+      purpose: purpose,
+      companion: companion,
+      text: training.completion,
+      image: 'https://japansio.info/fifi/uploads/generic.png',
+    };
+    return story;
   }
 
   saveTrainingData(): void {
@@ -103,6 +141,23 @@ export class AdminComponent implements OnInit {
         this.isloadingfiles = false;
       }
     );
+  }
+
+  testFunctions(i: number): void {
+    console.log('original', this.trainingDataSet[i]);
+    console.log('transformed', this.trainingToStory(this.trainingDataSet[i]));
+    this.openai
+      .putCollectionData(
+        JSON.stringify(this.trainingToStory(this.trainingDataSet[i]))
+      )
+      .subscribe(
+        (res) => {
+          console.log('success');
+        },
+        (err) => {
+          console.log('error', err.message);
+        }
+      );
   }
 
   uploadTrainingFile(): void {
