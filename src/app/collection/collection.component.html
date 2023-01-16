@@ -13,7 +13,14 @@
 
 <span *ngIf="storyBookLoaded">
   <div>
-    <p>{{ message }}</p>
+    <span class="menu">
+      <a alt="première histoire" class="nav" (click)="firstStory()"><<</a
+      ><a alt="histoire précédente" class="nav" (click)="previousStory()"><</a>
+      <p>{{ message }}</p>
+      <a alt="histoire suivante" class="nav" (click)="nextStory()">></a
+      ><a alt="dernière histoire" class="nav" (click)="lastStory()">>></a>
+    </span>
+    <button (click)="randomStory()">Histoire au hasard</button>
   </div>
   <div>
     <h2>
@@ -28,12 +35,13 @@
   </div>
 
   <div>
-    <button (click)="previousStory()" [disabled]="bookStart">
-      Histoire précédente
-    </button>
-    <button (click)="nextStory()" [disabled]="bookEnd">
-      Histoire suivante
-    </button>
+    <span class="menu">
+      <a alt="première histoire" class="nav" (click)="firstStory()"><<</a
+      ><a alt="histoire précédente" class="nav" (click)="previousStory()"><</a>
+      <p>{{ message }}</p>
+      <a alt="histoire suivante" class="nav" (click)="nextStory()">></a
+      ><a alt="dernière histoire" class="nav" (click)="lastStory()">>></a>
+    </span>
     <button (click)="randomStory()">Histoire au hasard</button>
   </div>
 </span>

@@ -13,6 +13,28 @@ h1 {
   font-weight: bold;
 }
 
+span.menu {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+a.nav {
+  font: 1em 'verdana';
+  margin-left: 20px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-weight: bold;
+  color: #4caf50;
+  cursor: pointer;
+}
+
+a.nav:hover {
+  color: black;
+  cursor: pointer;
+}
+
 h2 {
   font: 1.5em 'verdana';
   margin-bottom: 40px;
@@ -38,6 +60,7 @@ label {
   font: 1em 'verdana';
   font-weight: bold;
   color: black;
+  margin-left: 20px;
 }
 
 ::placeholder {

@@ -45,12 +45,9 @@ export class CollectionComponent implements OnInit {
     );
   }
 
-  nextStory(): void {
-    this.bookStart = false;
-    this.index += 1;
-    if (this.index === this.booklength - 1) {
-      this.bookEnd = true;
-    }
+  firstStory(): void {
+    this.bookStart = true;
+    this.index = 0;
     this.currStory = this.storyBook[this.index];
     this.message =
       'Histoire ' +
@@ -59,18 +56,47 @@ export class CollectionComponent implements OnInit {
       this.storyBook.length.toString();
   }
 
-  previousStory(): void {
-    this.bookEnd = false;
-    this.index -= 1;
-    if (this.index === 0) {
-      this.bookStart = true;
-    }
+  lastStory(): void {
+    this.bookEnd = true;
+    this.index = this.booklength - 1;
     this.currStory = this.storyBook[this.index];
     this.message =
-      ' Histoire ' +
+      'Histoire ' +
       (this.index + 1).toString() +
       ' sur ' +
       this.storyBook.length.toString();
+  }
+
+  nextStory(): void {
+    if (!this.bookEnd) {
+      this.bookStart = false;
+      this.index += 1;
+      if (this.index === this.booklength - 1) {
+        this.bookEnd = true;
+      }
+      this.currStory = this.storyBook[this.index];
+      this.message =
+        'Histoire ' +
+        (this.index + 1).toString() +
+        ' sur ' +
+        this.storyBook.length.toString();
+    }
+  }
+
+  previousStory(): void {
+    if (!this.bookStart) {
+      this.bookEnd = false;
+      this.index -= 1;
+      if (this.index === 0) {
+        this.bookStart = true;
+      }
+      this.currStory = this.storyBook[this.index];
+      this.message =
+        ' Histoire ' +
+        (this.index + 1).toString() +
+        ' sur ' +
+        this.storyBook.length.toString();
+    }
   }
 
   randomStory(): void {
