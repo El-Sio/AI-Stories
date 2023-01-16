@@ -24,14 +24,30 @@
   </div>
   <div>
     <h2>
-      Fifi et Rhino vont à {{ currStory.location }} pour
+      Fifi et Rhino vont {{ currStory.location }} pour
       {{ currStory.purpose }}
       <span *ngIf="currStory?.companion">avec {{ currStory.companion }}</span>
     </h2>
     <p>{{ currStory.text }}</p>
   </div>
   <div>
-    <img src="{{ currStory.image }}" width="512" height="512" />
+    <div *ngIf="imagechanging" id="loading"></div>
+    <img
+      *ngIf="!imagechanging"
+      src="{{ currStory.image }}"
+      width="512"
+      height="512"
+    />
+    <button
+      *ngIf="isGeneric[index]"
+      [disabled]="imagechanging"
+      (click)="changeImage(index)"
+    >
+      Changer l'image générique
+    </button>
+    <button *ngIf="isModified[index]" (click)="saveStories()">
+      Enregistrer la modification
+    </button>
   </div>
 
   <div>
@@ -45,3 +61,8 @@
     <button (click)="randomStory()">Histoire au hasard</button>
   </div>
 </span>
+
+<div>
+  <p>connecté en tant que : {{ login }}</p>
+  <button (click)="logout()">Logout</button>
+</div>
