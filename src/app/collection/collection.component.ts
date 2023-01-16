@@ -46,6 +46,7 @@ export class CollectionComponent implements OnInit {
   }
 
   firstStory(): void {
+    this.bookEnd = false;
     this.bookStart = true;
     this.index = 0;
     this.currStory = this.storyBook[this.index];
@@ -58,6 +59,7 @@ export class CollectionComponent implements OnInit {
 
   lastStory(): void {
     this.bookEnd = true;
+    this.bookStart = false;
     this.index = this.booklength - 1;
     this.currStory = this.storyBook[this.index];
     this.message =
