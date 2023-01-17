@@ -20,7 +20,7 @@ export class StoryPageComponent implements OnInit {
   public imgsrc = '';
   public isloading_img = false;
   public isloading_txt = false;
-  public illustrated = false;
+  public illustrated = true;
   public temperature = 5;
   public login = AppInitService.currentUser.user;
   private token = '';
@@ -127,33 +127,30 @@ export class StoryPageComponent implements OnInit {
     this.router.navigate(['login']);
   }
 
-  saveImage(): void {
+  saveStory(): void {
     this.openai.saveImage(this.imgsrc).subscribe(
       (res) => {
         this.message_img = res.url;
         this.imgsaved = true;
+        let body = {
+          location: this.storyPlace,
+          purpose: this.storyPurpose,
+          companion: this.storyCompanion,
+          text: this.story,
+          image: this.message_img,
+        };
+        this.openai.putCollectionData(JSON.stringify(body)).subscribe(
+          (res) => {
+            this.message_story = 'Histoire enregistrée, merci de votre aide !';
+            this.allsaved = true;
+          },
+          (err) => {
+            this.message_story = 'Error : ' + err.message;
+          }
+        );
       },
       (err) => {
         this.message_img = err.message;
-      }
-    );
-  }
-
-  saveStory(): void {
-    let body = {
-      location: this.storyPlace,
-      purpose: this.storyPurpose,
-      companion: this.storyCompanion,
-      text: this.story,
-      image: this.message_img,
-    };
-    this.openai.putCollectionData(JSON.stringify(body)).subscribe(
-      (res) => {
-        this.message_story = 'Histoire enregistrée, merci de votre aide !';
-        this.allsaved = true;
-      },
-      (err) => {
-        this.message_story = 'Error : ' + err.message;
       }
     );
   }

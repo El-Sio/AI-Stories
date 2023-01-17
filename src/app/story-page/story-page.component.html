@@ -96,17 +96,13 @@
 </div>
 
 <div *ngIf="admin">
-  <button (click)="sendFeedback()" [disabled]="!completed || saved">
-    Enregistrer le texte
-  </button>
-  <p>{{ message }}</p>
-  <button (click)="saveImage()" [disabled]="!completedimg || imgsaved">
-    Enregistrer l'image
-  </button>
-  <p>{{ message_img }}</p>
-  <button (click)="saveStory()" [disabled]="!imgsaved || allsaved">
+  <button
+    (click)="saveStory()"
+    [disabled]="!completed || !completedimg || allsaved"
+  >
     Enregistrer l'histoire complète
   </button>
+  <p>{{ message_img }}</p>
   <p>{{ message_story }}</p>
 </div>
 
