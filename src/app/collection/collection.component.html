@@ -1,10 +1,14 @@
 <h1>Les histoires de Fifi et Rhino</h1>
 
 <div>
+  <button (click)="gotoStories()">Créer une nouvelle histoire</button>
+  <button *ngIf="admin" (click)="gotoAdmin()">Administrer</button>
+</div>
+
+<div>
   <button (click)="getStories()" [disabled]="storyBookLoaded">
     Récupérer les Histoires
   </button>
-  <button (click)="gotoStories()">Créer une nouvelle histoire</button>
 </div>
 
 <div *ngIf="storyBookLoading">
@@ -16,7 +20,7 @@
     <span class="menu">
       <a alt="première histoire" class="nav" (click)="firstStory()"><<</a
       ><a alt="histoire précédente" class="nav" (click)="previousStory()"><</a>
-      <p>{{ message }}</p>
+      <p class="nav">{{ message }}</p>
       <a alt="histoire suivante" class="nav" (click)="nextStory()">></a
       ><a alt="dernière histoire" class="nav" (click)="lastStory()">>></a>
     </span>
@@ -39,13 +43,13 @@
       height="512"
     />
     <button
-      *ngIf="isGeneric[index]"
+      *ngIf="isGeneric[index] && admin"
       [disabled]="imagechanging"
       (click)="changeImage(index)"
     >
       Changer l'image générique
     </button>
-    <button *ngIf="isModified[index]" (click)="saveStories()">
+    <button *ngIf="isModified[index] && admin" (click)="saveStories()">
       Enregistrer la modification
     </button>
   </div>
@@ -54,7 +58,7 @@
     <span class="menu">
       <a alt="première histoire" class="nav" (click)="firstStory()"><<</a
       ><a alt="histoire précédente" class="nav" (click)="previousStory()"><</a>
-      <p>{{ message }}</p>
+      <p class="nav">{{ message }}</p>
       <a alt="histoire suivante" class="nav" (click)="nextStory()">></a
       ><a alt="dernière histoire" class="nav" (click)="lastStory()">>></a>
     </span>

@@ -19,11 +19,16 @@ span.menu {
   justify-content: center;
 }
 
+p.nav {
+  font: 2em 'verdana';
+  font-weight: bold;
+}
+
 a.nav {
-  font: 1em 'verdana';
+  font: 3em 'verdana';
   margin-left: 20px;
-  margin-top: 16px;
-  margin-bottom: 16px;
+  margin-top: 18px;
+  margin-bottom: 18px;
   text-align: center;
   font-weight: bold;
   color: #4caf50;

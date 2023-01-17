@@ -78,12 +78,17 @@ textarea {
   resize: none;
 }
 
+textarea.small {
+  height: auto;
+}
+
 p,
 label,
 li {
   font: 1em 'verdana';
   font-weight: bold;
   color: black;
+  margin-bottom: 20px;
 }
 
 ::placeholder {

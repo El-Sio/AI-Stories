@@ -45,6 +45,14 @@ export class CollectionComponent implements OnInit {
     this.router.navigate(['login']);
   }
 
+  gotoAdmin(): void {
+    this.router.navigate(['admin']);
+  }
+
+  gotoCollection(): void {
+    this.router.navigate(['collection']);
+  }
+
   getStories(): void {
     this.storyBookLoading = true;
     this.openai.getCollectionData().subscribe(

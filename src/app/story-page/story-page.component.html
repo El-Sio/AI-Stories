@@ -3,6 +3,7 @@
 
 <div>
   <button (click)="gotoCollection()">Accéder aux anciennes histoires</button>
+  <button *ngIf="admin" (click)="gotoAdmin()">Admininistrer</button>
 </div>
 <div>
   <form>
@@ -107,7 +108,6 @@
     Enregistrer l'histoire complète
   </button>
   <p>{{ message_story }}</p>
-  <button (click)="gotoAdmin()">Admininistrer</button>
 </div>
 
 <div>

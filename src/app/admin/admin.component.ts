@@ -23,6 +23,7 @@ export class AdminComponent implements OnInit {
   public admin: Boolean;
   public editingList: boolean[] = [];
   public trainingDataSet: TraningData[] = [];
+  public storybook: completeStory[] = [];
   public message = '';
   public fileMessage = '';
   public changed = false;
@@ -103,7 +104,41 @@ export class AdminComponent implements OnInit {
     return story;
   }
 
-  saveTrainingData(): void {
+  getStories(): void {
+    this.isloading = true;
+    this.message = '';
+    this.openai.getCollectionData().subscribe(
+      (res) => {
+        this.storybook = res.slice(0, -1);
+        this.storybook.forEach((x, i) => (this.editingList[i] = false));
+        this.message = 'données reçues';
+        this.complete = true;
+        this.isloading = false;
+      },
+      (err) => {
+        this.message = err.message;
+        this.isloading = false;
+      }
+    );
+  }
+
+  saveStories(): void {
+    let newCollection = this.arrayToJsonLines(this.storybook);
+    this.openai.overwriteCollectionData(newCollection).subscribe(
+      (res) => {
+        this.storybook = [];
+        this.editingList = [];
+        this.changed = false;
+        this.complete = false;
+        this.message = 'Données enregistrées !';
+      },
+      (err) => {
+        this.message = 'Erreur : ' + err.message;
+      }
+    );
+  }
+
+  /* saveTrainingData(): void {
     //console.log('input', this.trainingDataSet);
     let newTrainingData = this.arrayToJsonLines(this.trainingDataSet);
     //console.log('output', newTrainingData);
@@ -119,7 +154,7 @@ export class AdminComponent implements OnInit {
       }
     );
     this.changed = false;
-  }
+  }*/
 
   getTrainingFiles(): void {
     this.isloadingfiles = true;
@@ -160,10 +195,21 @@ export class AdminComponent implements OnInit {
       );
   }
 
+  gotoAdmin(): void {
+    this.router.navigate(['admin']);
+  }
+
+  gotoCollection(): void {
+    this.router.navigate(['collection']);
+  }
+
   uploadTrainingFile(): void {
     this.isloadingfiles = true;
     this.fileMessage = '';
     this.completeupload = false;
+    this.storybook.forEach((s) => {
+      this.trainingDataSet.push(this.storyToTraining(s));
+    });
     let newTrainingData = this.arrayToJsonLines(this.trainingDataSet);
     this.openai.UploadFile(this.token, newTrainingData).subscribe(
       (res) => {
@@ -203,7 +249,7 @@ export class AdminComponent implements OnInit {
     );
   }
 
-  getTrainingData(): void {
+  /* getTrainingData(): void {
     this.message = '';
     this.openai.getTrainingData().subscribe(
       (res) => {
@@ -220,7 +266,7 @@ export class AdminComponent implements OnInit {
         this.message = err.message;
       }
     );
-  }
+  }*/
 
   listFineTuneJobs(): void {
     this.finetunemessage = '';

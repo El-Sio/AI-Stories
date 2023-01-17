@@ -5,6 +5,7 @@
 
 <div>
   <button routerLink="/story">Revenir aux histoires</button>
+  <button routerLink="/collection">Revenir à la collection</button>
 </div>
 
 <br />
@@ -108,10 +109,10 @@
 <h2>Données de training sur le serveur</h2>
 
 <div>
-  <button (click)="getTrainingData()" [disabled]="isloading || complete">
+  <button (click)="getStories()" [disabled]="isloading || complete">
     Récupérer les données de training
   </button>
-  <button *ngIf="complete" (click)="saveTrainingData()" [disabled]="!changed">
+  <button *ngIf="complete" (click)="saveStories()" [disabled]="!changed">
     Enregistrer les données de training
   </button>
   <br />
@@ -121,11 +122,30 @@
 <div *ngIf="isloading" id="loading"></div>
 
 <ul>
-  <li *ngFor="let train of trainingDataSet; let i = index">
+  <li *ngFor="let story of storybook; let i = index">
     <div>
+      <label>Location : </label>
+      <textarea
+        class="small"
+        [disabled]="!editingList[i]"
+        [(ngModel)]="story.location"
+      ></textarea>
+      <label>Purpose : </label>
+      <textarea
+        class="small"
+        [disabled]="!editingList[i]"
+        [(ngModel)]="story.purpose"
+      ></textarea>
+      <label>Companion : </label>
+      <textarea
+        class="small"
+        [disabled]="!editingList[i]"
+        [(ngModel)]="story.companion"
+      ></textarea>
+      <label>Story : </label>
       <textarea
         [disabled]="!editingList[i]"
-        [(ngModel)]="train.completion"
+        [(ngModel)]="story.text"
       ></textarea>
       <br />
       <button [disabled]="editingList[i]" (click)="toggle(i)">Modifier</button>
