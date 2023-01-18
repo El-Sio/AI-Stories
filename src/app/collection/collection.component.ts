@@ -26,6 +26,7 @@ export class CollectionComponent implements OnInit {
   public admin: Boolean = false;
   public token = '';
   public login = '';
+  public oldimage = '';
   public imagechanging = false;
   public imagemessage = '';
   public iscurrStorySet = true;
@@ -51,7 +52,7 @@ export class CollectionComponent implements OnInit {
 
   logout(): void {
     this.authent.logout();
-    this.router.navigate(['collection']);
+    this.router.navigate(['/']);
   }
 
   gotoAdmin(): void {
@@ -60,10 +61,6 @@ export class CollectionComponent implements OnInit {
 
   gotoCollection(): void {
     this.router.navigate(['collection']);
-  }
-
-  closepopup(i: number): void {
-    this.popupclass[i] = 'popupclosed';
   }
 
   public scrollToAnchor(location: string, wait = 0): void {
@@ -133,6 +130,7 @@ export class CollectionComponent implements OnInit {
         this.storyBookLoading = false;
         this.storyBook = res.slice(0, -1);
         this.booklength = this.storyBook.length;
+        this.storyBook.reverse();
         this.currStory = this.storyBook[this.storyBook.length - 1];
         this.index = this.booklength - 1;
         this.bookEnd = true;
@@ -164,6 +162,7 @@ export class CollectionComponent implements OnInit {
         this.storyBookLoading = false;
         this.storyBook = res.slice(0, -1);
         this.booklength = this.storyBook.length;
+        this.storyBook.reverse();
         this.currStory = this.storyBook[i];
         this.index = i;
         this.bookEnd = this.booklength - 1 === i;
@@ -207,8 +206,15 @@ export class CollectionComponent implements OnInit {
     );
   }
 
+  cancel(i: number): void {
+    this.storyBook[i].image = this.oldimage;
+    this.isModified[i] = false;
+  }
+
   changeImage(i: number): void {
     this.imagechanging = true;
+
+    this.oldimage = this.storyBook[i].image;
 
     let companion = '';
 

@@ -19,19 +19,6 @@
   <ul class="image-gallery">
     <li *ngFor="let story of storyBook; let i = index">
       <img src="{{ storyBook[i].image }}" />
-      <div [ngClass]="popupclass[i]">
-        <span (click)="closepopup(i)" class="close">&times;</span>
-        <h2>
-          Fifi et Rhino vont {{ currStory.location }} pour
-          {{ currStory.purpose }}
-          <span *ngIf="currStory?.companion"
-            >avec {{ currStory.companion }}</span
-          >
-        </h2>
-        <img class="popupimage" src="{{ storyBook[i].image }}" />
-        <p class="popupcontent">{{ storyBook[i].text }}</p>
-        <span (click)="closepopup(i)" class="close">&times;</span>
-      </div>
       <div class="overlay" (click)="setCurrStory(i)">
         <span class="legend">
           Fifi et Rhino vont {{ storyBook[i].location }} pour
@@ -46,16 +33,6 @@
 </div>
 
 <span *ngIf="storyBookLoaded && iscurrStorySet" id="fullStory_{{ index }}">
-  <div class="card">
-    <span class="menu">
-      <a alt="première histoire" class="nav" (click)="firstStory()"><<</a
-      ><a alt="histoire précédente" class="nav" (click)="previousStory()"><</a>
-      <p class="nav">{{ message }}</p>
-      <a alt="histoire suivante" class="nav" (click)="nextStory()">></a
-      ><a alt="dernière histoire" class="nav" (click)="lastStory()">>></a>
-    </span>
-    <button (click)="randomStory()">Histoire au hasard</button>
-  </div>
   <div class="card">
     <h2>
       Fifi et Rhino vont {{ currStory.location }} pour
@@ -73,15 +50,25 @@
       width="512"
       height="512"
     />
+    <img
+      class="standalone"
+      *ngIf="isModified[index]"
+      src="{{ oldimage }}"
+      width="512"
+      height="512"
+    />
     <button
-      *ngIf="isGeneric[index] && admin"
+      *ngIf="admin"
       [disabled]="imagechanging"
       (click)="changeImage(index)"
     >
-      Changer l'image générique
+      Modifier l'image
     </button>
     <button *ngIf="isModified[index] && admin" (click)="saveStories()">
       Enregistrer la modification
+    </button>
+    <button *ngIf="isModified[index] && admin" (click)="cancel(index)">
+      Annuler la modification
     </button>
   </div>
 
