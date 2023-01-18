@@ -69,7 +69,6 @@ export class CollectionComponent implements OnInit {
   public scrollToAnchor(location: string, wait = 0): void {
     const element = document.querySelector('#' + location);
     if (element) {
-      console.log('element found');
       setTimeout(() => {
         element.scrollIntoView({
           behavior: 'smooth',
@@ -77,8 +76,6 @@ export class CollectionComponent implements OnInit {
           inline: 'nearest',
         });
       }, wait);
-    } else {
-      console.log('element not found');
     }
   }
 
@@ -100,7 +97,33 @@ export class CollectionComponent implements OnInit {
       (this.index + 1).toString() +
       ' sur ' +
       this.storyBook.length.toString();
-    this.router.navigateByUrl('collection#fullStory_' + this.index.toString());
+    console.log('looking for element #fullStory_' + this.index.toString());
+    this.waitForElm('#fullStory_' + this.index.toString()).then((v) => {
+      console.log('element there');
+      this.router.navigateByUrl(
+        'collection#fullStory_' + this.index.toString()
+      );
+    });
+  }
+
+  waitForElm(selector): Promise<any> {
+    return new Promise((resolve) => {
+      if (document.querySelector(selector)) {
+        return resolve(document.querySelector(selector));
+      }
+
+      const observer = new MutationObserver((mutations) => {
+        if (document.querySelector(selector)) {
+          resolve(document.querySelector(selector));
+          observer.disconnect();
+        }
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+    });
   }
 
   getStories(): void {
