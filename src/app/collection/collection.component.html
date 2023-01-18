@@ -1,11 +1,11 @@
 <h1>Les histoires de Fifi et Rhino</h1>
 
-<div>
+<div class="card">
   <button (click)="gotoStories()">Créer une nouvelle histoire</button>
   <button *ngIf="admin" (click)="gotoAdmin()">Administrer</button>
 </div>
 
-<div>
+<div class="card">
   <button (click)="getStories()" [disabled]="storyBookLoaded">
     Récupérer les Histoires
   </button>
@@ -15,8 +15,38 @@
   <div *ngIf="storyBookLoading" id="loading"></div>
 </div>
 
-<span *ngIf="storyBookLoaded">
-  <div>
+<div id="top" class="container" *ngIf="storyBookLoaded">
+  <ul class="image-gallery">
+    <li *ngFor="let story of storyBook; let i = index">
+      <img src="{{ storyBook[i].image }}" />
+      <div [ngClass]="popupclass[i]">
+        <span (click)="closepopup(i)" class="close">&times;</span>
+        <h2>
+          Fifi et Rhino vont {{ currStory.location }} pour
+          {{ currStory.purpose }}
+          <span *ngIf="currStory?.companion"
+            >avec {{ currStory.companion }}</span
+          >
+        </h2>
+        <img class="popupimage" src="{{ storyBook[i].image }}" />
+        <p class="popupcontent">{{ storyBook[i].text }}</p>
+        <span (click)="closepopup(i)" class="close">&times;</span>
+      </div>
+      <div class="overlay" (click)="setCurrStory(i)">
+        <span class="legend">
+          Fifi et Rhino vont {{ storyBook[i].location }} pour
+          {{ storyBook[i].purpose }}
+          <span *ngIf="storyBook[i]?.companion"
+            >avec {{ storyBook[i].companion }}</span
+          >
+        </span>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<span *ngIf="storyBookLoaded && iscurrStorySet" id="fullStory_{{ index }}">
+  <div class="card">
     <span class="menu">
       <a alt="première histoire" class="nav" (click)="firstStory()"><<</a
       ><a alt="histoire précédente" class="nav" (click)="previousStory()"><</a>
@@ -26,7 +56,7 @@
     </span>
     <button (click)="randomStory()">Histoire au hasard</button>
   </div>
-  <div>
+  <div class="card">
     <h2>
       Fifi et Rhino vont {{ currStory.location }} pour
       {{ currStory.purpose }}
@@ -34,9 +64,10 @@
     </h2>
     <p>{{ currStory.text }}</p>
   </div>
-  <div>
+  <div class="card">
     <div *ngIf="imagechanging" id="loading"></div>
     <img
+      class="standalone"
       *ngIf="!imagechanging"
       src="{{ currStory.image }}"
       width="512"
@@ -54,7 +85,7 @@
     </button>
   </div>
 
-  <div>
+  <div class="card">
     <span class="menu">
       <a alt="première histoire" class="nav" (click)="firstStory()"><<</a
       ><a alt="histoire précédente" class="nav" (click)="previousStory()"><</a>
@@ -66,7 +97,7 @@
   </div>
 </span>
 
-<div>
+<div class="card">
   <p>connecté en tant que : {{ login }}</p>
   <button (click)="logout()">Logout</button>
 </div>

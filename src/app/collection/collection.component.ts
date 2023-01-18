@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OpenaiService } from '../openai.service';
 import { completeStory } from '../data-model';
 import { AppInitService } from '../app-init.service';
 import { AuthenticationService } from '../authentication.service';
+import { elementAt } from 'rxjs';
 
 @Component({
   selector: 'app-collection',
@@ -27,17 +28,25 @@ export class CollectionComponent implements OnInit {
   public login = '';
   public imagechanging = false;
   public imagemessage = '';
+  public iscurrStorySet = true;
+  public popupclass: string[] = [];
 
   constructor(
     public openai: OpenaiService,
     public router: Router,
-    public authent: AuthenticationService
+    public authent: AuthenticationService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     this.admin = AppInitService.currentUser.isAdmin;
     this.token = AppInitService.currentUser.message;
     this.login = AppInitService.currentUser.user;
+
+    this.route.fragment.subscribe((fragment: string) => {
+      console.log(fragment);
+      this.scrollToAnchor(fragment);
+    });
   }
 
   logout(): void {
@@ -51,6 +60,47 @@ export class CollectionComponent implements OnInit {
 
   gotoCollection(): void {
     this.router.navigate(['collection']);
+  }
+
+  closepopup(i: number): void {
+    this.popupclass[i] = 'popupclosed';
+  }
+
+  public scrollToAnchor(location: string, wait = 0): void {
+    const element = document.querySelector('#' + location);
+    if (element) {
+      console.log('element found');
+      setTimeout(() => {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+          inline: 'nearest',
+        });
+      }, wait);
+    } else {
+      console.log('element not found');
+    }
+  }
+
+  setCurrStory(i: number) {
+    this.iscurrStorySet = true;
+    this.bookEnd = false;
+    this.bookStart = false;
+    this.index = i;
+    //this.popupclass[i] = 'popupopen';
+    if (this.index === this.booklength - 1) {
+      this.bookEnd = true;
+    }
+    if (this.index === 0) {
+      this.bookStart = true;
+    }
+    this.currStory = this.storyBook[this.index];
+    this.message =
+      'Histoire ' +
+      (this.index + 1).toString() +
+      ' sur ' +
+      this.storyBook.length.toString();
+    this.router.navigateByUrl('collection#fullStory_' + this.index.toString());
   }
 
   getStories(): void {
@@ -71,6 +121,7 @@ export class CollectionComponent implements OnInit {
           this.storyBook.length.toString();
 
         this.storyBook.forEach((s, i) => {
+          this.popupclass.push('popupclosed');
           if (s.image === 'https://japansio.info/fifi/uploads/generic.png') {
             this.isGeneric[i] = true;
           }
