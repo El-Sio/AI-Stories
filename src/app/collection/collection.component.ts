@@ -23,7 +23,7 @@ export class CollectionComponent implements OnInit {
   public bookStart = false;
   public isGeneric: boolean[] = [];
   public isModified: boolean[] = [];
-  public admin: Boolean;
+  public admin: Boolean = false;
   public token = '';
   public login = '';
   public imagechanging = false;
@@ -39,9 +39,9 @@ export class CollectionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.admin = AppInitService.currentUser.isAdmin;
-    this.token = AppInitService.currentUser.message;
-    this.login = AppInitService.currentUser.user;
+    this.admin = AppInitService.currentUser?.isAdmin;
+    this.token = AppInitService.currentUser?.message;
+    this.login = AppInitService.currentUser?.user;
 
     this.route.fragment.subscribe((fragment: string) => {
       console.log(fragment);
@@ -51,7 +51,7 @@ export class CollectionComponent implements OnInit {
 
   logout(): void {
     this.authent.logout();
-    this.router.navigate(['login']);
+    this.router.navigate(['collection']);
   }
 
   gotoAdmin(): void {

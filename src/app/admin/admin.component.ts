@@ -63,7 +63,7 @@ export class AdminComponent implements OnInit {
 
   logout(): void {
     this.authent.logout();
-    this.router.navigate(['login']);
+    this.router.navigate(['collection']);
   }
 
   storyToTraining(story: completeStory): TraningData {

@@ -1,14 +1,14 @@
 <h1>Les histoires de Fifi et Rhino</h1>
 
 <div class="card">
-  <button (click)="gotoStories()">Créer une nouvelle histoire</button>
-  <button *ngIf="admin" (click)="gotoAdmin()">Administrer</button>
-</div>
-
-<div class="card">
   <button (click)="getStories()" [disabled]="storyBookLoaded">
     Récupérer les Histoires
   </button>
+</div>
+
+<div class="card">
+  <button (click)="gotoStories()">Créer une nouvelle histoire</button>
+  <button *ngIf="login && admin" (click)="gotoAdmin()">Administrer</button>
 </div>
 
 <div *ngIf="storyBookLoading">
@@ -97,7 +97,7 @@
   </div>
 </span>
 
-<div class="card">
+<div *ngIf="login" class="card">
   <p>connecté en tant que : {{ login }}</p>
   <button (click)="logout()">Logout</button>
 </div>

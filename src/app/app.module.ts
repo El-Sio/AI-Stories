@@ -34,14 +34,13 @@ export function initializeApp(appInitService: AppInitService) {
       {
         path: 'collection',
         component: CollectionComponent,
-        canActivate: [AuthGuard],
       },
       {
         path: 'admin',
         component: AdminComponent,
         canActivate: [AuthGuard],
       },
-      { path: '**', component: LoginComponent },
+      { path: '**', component: CollectionComponent },
     ]),
     BrowserAnimationsModule,
   ],
