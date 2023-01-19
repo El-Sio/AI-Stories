@@ -110,7 +110,6 @@ export class StoryPageComponent implements OnInit {
       this.openai.getImage(prompt_img, this.token).subscribe(
         (x) => {
           this.imgsrc = x.data[0].b64_json;
-          console.log(this.imgsrc);
           this.isloading_img = false;
           this.completedimg = true;
         },

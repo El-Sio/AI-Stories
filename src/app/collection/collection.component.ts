@@ -45,7 +45,6 @@ export class CollectionComponent implements OnInit {
     this.login = AppInitService.currentUser?.user;
 
     this.route.fragment.subscribe((fragment: string) => {
-      console.log(fragment);
       this.scrollToAnchor(fragment);
     });
   }
@@ -94,9 +93,7 @@ export class CollectionComponent implements OnInit {
       (this.index + 1).toString() +
       ' sur ' +
       this.storyBook.length.toString();
-    console.log('looking for element #fullStory_' + this.index.toString());
     this.waitForElm('#fullStory_' + this.index.toString()).then((v) => {
-      console.log('element there');
       this.router.navigateByUrl(
         'collection#fullStory_' + this.index.toString()
       );
