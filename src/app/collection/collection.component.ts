@@ -31,6 +31,13 @@ export class CollectionComponent implements OnInit {
   public imagemessage = '';
   public iscurrStorySet = true;
   public popupclass: string[] = [];
+  public currentpage: completeStory[];
+  public Pages: completeStory[][] = [];
+  public STORIES_PER_PAGE = 8;
+  public pageIndex = 0;
+  public pageNumber = 0;
+  public firstPage = true;
+  public lastPage = false;
 
   constructor(
     public openai: OpenaiService,
@@ -77,12 +84,33 @@ export class CollectionComponent implements OnInit {
     }
   }
 
+  nextPage(): void {
+    if(!this.lastPage) {
+      this.firstPage = false;
+      this.pageIndex +=1;
+      if(this.pageIndex === this.pageNumber -1) {
+        this.lastPage = true;
+      }
+      this.currentpage = this.Pages[this.pageIndex];
+    }
+  }
+
+  previousPage(): void {
+    if(!this.firstPage) {
+      this.lastPage = false;
+      this.pageIndex -=1;
+      if(this.pageIndex === 0) {
+        this.firstPage = true;
+      }
+      this.currentpage = this.Pages[this.pageIndex];
+  }
+  }
+
   setCurrStory(i: number) {
     this.iscurrStorySet = true;
     this.bookEnd = false;
     this.bookStart = false;
     this.index = i;
-    //this.popupclass[i] = 'popupopen';
     if (this.index === this.booklength - 1) {
       this.bookEnd = true;
     }
@@ -130,6 +158,14 @@ export class CollectionComponent implements OnInit {
         this.storyBook = res.slice(0, -1);
         this.booklength = this.storyBook.length;
         this.storyBook.reverse();
+        this.storyBook.forEach((s,i) => {
+          this.Pages[Math.floor(i/this.STORIES_PER_PAGE)] = [];
+        });
+        this.storyBook.forEach((s,i) => {
+          this.Pages[Math.floor(i/this.STORIES_PER_PAGE)].push(s)
+        });
+        this.pageNumber = this.Pages.length;
+        this.currentpage = this.Pages[0];
         this.currStory = this.storyBook[0];
         this.index = this.booklength - 1;
         this.bookEnd = true;

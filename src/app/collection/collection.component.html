@@ -16,20 +16,29 @@
 </div>
 
 <div id="top" class="container" *ngIf="storyBookLoaded">
+  <span class="menu"><a class="nav" (click)="previousPage()"><</a>
   <ul class="image-gallery">
-    <li *ngFor="let story of storyBook; let i = index">
-      <img src="{{ storyBook[i].image }}" />
-      <div class="overlay" (click)="setCurrStory(i)">
+    <li *ngFor="let story of currentpage; let i = index">
+      <img src="{{ story.image }}" />
+      <div class="overlay" (click)="setCurrStory(pageIndex*STORIES_PER_PAGE + i)">
         <span class="legend">
-          Fifi et Rhino vont {{ storyBook[i].location }} pour
-          {{ storyBook[i].purpose }}
-          <span *ngIf="storyBook[i]?.companion"
-            >avec {{ storyBook[i].companion }}</span
+          Fifi et Rhino vont {{ story.location }} pour
+          {{ story.purpose }}
+          <span *ngIf="story?.companion"
+            >avec {{ story.companion }}</span
           >
         </span>
       </div>
     </li>
   </ul>
+  <a class="nav" (click)="nextPage()">></a>
+</span>
+</div>
+
+<div class="card">
+  <button (click)="previousPage()" [disabled]="firstPage">Page précédente</button>
+  <h2>Page {{pageIndex+1}} / {{pageNumber}}</h2>
+  <button (click)="nextPage()" [disabled]="lastPage">Page suivante</button>
 </div>
 
 <span *ngIf="storyBookLoaded && iscurrStorySet" id="fullStory_{{ index }}">
