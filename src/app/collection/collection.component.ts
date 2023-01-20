@@ -44,6 +44,8 @@ export class CollectionComponent implements OnInit {
     this.token = AppInitService.currentUser?.message;
     this.login = AppInitService.currentUser?.user;
 
+    this.getStories();
+
     this.route.fragment.subscribe((fragment: string) => {
       this.scrollToAnchor(fragment);
     });
@@ -128,7 +130,7 @@ export class CollectionComponent implements OnInit {
         this.storyBook = res.slice(0, -1);
         this.booklength = this.storyBook.length;
         this.storyBook.reverse();
-        this.currStory = this.storyBook[this.storyBook.length - 1];
+        this.currStory = this.storyBook[0];
         this.index = this.booklength - 1;
         this.bookEnd = true;
         this.storyBookLoaded = true;
