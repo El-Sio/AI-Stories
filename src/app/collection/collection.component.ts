@@ -26,7 +26,7 @@ export class CollectionComponent implements OnInit {
   public admin: Boolean = false;
   public token = '';
   public login = '';
-  public oldimage = '';
+  public oldimage = [];
   public imagechanging = false;
   public imagemessage = '';
   public iscurrStorySet = true;
@@ -157,8 +157,12 @@ export class CollectionComponent implements OnInit {
         this.storyBookLoading = false;
         this.storyBook = res.slice(0, -1);
         this.booklength = this.storyBook.length;
+        
+        //Latest story first
         this.storyBook.reverse();
+
         this.storyBook.forEach((s,i) => {
+          this.oldimage[i] = '';
           this.Pages[Math.floor(i/this.STORIES_PER_PAGE)] = [];
         });
         this.storyBook.forEach((s,i) => {
@@ -198,6 +202,17 @@ export class CollectionComponent implements OnInit {
         this.storyBook = res.slice(0, -1);
         this.booklength = this.storyBook.length;
         this.storyBook.reverse();
+
+        this.storyBook.forEach((s,i) => {
+          this.oldimage[i] = '';
+          this.Pages[Math.floor(i/this.STORIES_PER_PAGE)] = [];
+        });
+        this.storyBook.forEach((s,i) => {
+          this.Pages[Math.floor(i/this.STORIES_PER_PAGE)].push(s)
+        });
+        this.pageNumber = this.Pages.length;
+        this.currentpage = this.Pages[Math.floor(i/this.STORIES_PER_PAGE)];
+
         this.currStory = this.storyBook[i];
         this.index = i;
         this.bookEnd = this.booklength - 1 === i;
@@ -227,11 +242,12 @@ export class CollectionComponent implements OnInit {
   }
 
   saveStories(): void {
-    let newCollection = this.arrayToJsonLines(this.storyBook);
+    let newCollection = this.arrayToJsonLines(this.storyBook.reverse());
     this.openai.overwriteCollectionData(newCollection).subscribe(
       (res) => {
         this.storyBook = [];
         this.isModified = [];
+        this.oldimage = [];
         this.storyBookLoaded = false;
         this.getStorieswithIndex(this.index);
       },
@@ -242,14 +258,14 @@ export class CollectionComponent implements OnInit {
   }
 
   cancel(i: number): void {
-    this.storyBook[i].image = this.oldimage;
+    this.storyBook[i].image = this.oldimage[i];
     this.isModified[i] = false;
   }
 
   changeImage(i: number): void {
     this.imagechanging = true;
 
-    this.oldimage = this.storyBook[i].image;
+    this.oldimage[i] = this.storyBook[i].image;
 
     let companion = '';
 
