@@ -25,6 +25,8 @@ export function initializeApp(appInitService: AppInitService) {
     FormsModule,
     HttpClientModule,
     RouterModule.forRoot([
+      { path: '', redirectTo: 'collection', pathMatch: 'full' },
+      { path: '**', pathMatch: 'full', component: CollectionComponent },
       { path: 'login', component: LoginComponent },
       {
         path: 'story',
@@ -40,7 +42,6 @@ export function initializeApp(appInitService: AppInitService) {
         component: AdminComponent,
         canActivate: [AuthGuard],
       },
-      { path: '**', component: CollectionComponent },
     ]),
     BrowserAnimationsModule,
   ],
