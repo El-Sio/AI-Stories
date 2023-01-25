@@ -17,7 +17,9 @@ export class StoryPageComponent implements OnInit {
   public storyPurpose = '';
   public storyCompanion = '';
   public story = 'Votre histoire ici';
-  public imgsrc = '';
+  public imgsrc = [];
+  public ischecked = [];
+  public selectedimage = '';
   public isloading_img = false;
   public isloading_txt = false;
   public illustrated = true;
@@ -63,7 +65,7 @@ export class StoryPageComponent implements OnInit {
   generateStory(): void {
     this.isloading_txt = true;
     this.story = 'Chargement en cours...';
-    this.imgsrc = '';
+    this.imgsrc = [];
     let companion = '';
     if (this.storyCompanion) {
       companion = ' avec ' + this.storyCompanion;
@@ -109,7 +111,12 @@ export class StoryPageComponent implements OnInit {
       this.isloading_img = true;
       this.openai.getImage(prompt_img, this.token).subscribe(
         (x) => {
-          this.imgsrc = x.data[0].b64_json;
+          x.data.forEach(item => {
+            this.imgsrc.push(item.b64_json);
+            this.ischecked.push(false);
+          });
+          this.selectedimage = this.imgsrc[0];
+          this.ischecked[0] = true;
           this.isloading_img = false;
           this.completedimg = true;
         },
@@ -127,7 +134,7 @@ export class StoryPageComponent implements OnInit {
   }
 
   saveStory(): void {
-    this.openai.saveImage(this.imgsrc).subscribe(
+    this.openai.saveImage(this.selectedimage).subscribe(
       (res) => {
         this.message_img = res.url;
         this.imgsaved = true;
@@ -191,6 +198,12 @@ export class StoryPageComponent implements OnInit {
 
   gotoCollection(): void {
     this.router.navigate(['collection']);
+  }
+
+  selected(item: string, index: number): void {
+    this.selectedimage = item;
+    this.ischecked.forEach((i,j) => this.ischecked[j] = false);
+    this.ischecked[index] = true;
   }
 
   ngOnInit() {

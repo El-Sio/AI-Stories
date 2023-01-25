@@ -41,8 +41,9 @@ export function initializeApp(appInitService: AppInitService) {
         component: AdminComponent,
         canActivate: [AuthGuard],
       },
-      { path: '**', pathMatch: 'full', component: CollectionComponent },
-    ]),
+      { path: '**', redirectTo: 'collection', pathMatch: 'full' },
+    ],
+    {onSameUrlNavigation: 'reload', useHash: true }),
     BrowserAnimationsModule,
   ],
   declarations: [

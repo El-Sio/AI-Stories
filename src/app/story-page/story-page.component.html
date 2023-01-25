@@ -85,14 +85,19 @@
   <p>{{ story }}</p>
 </div>
 
-<div *ngIf="illustrated">
+<div class="images" *ngIf="illustrated">
   <div *ngIf="isloading_img" id="loading"></div>
+  <div class="gallery" *ngFor="let i of imgsrc; let j = index">
+    <label>
+    <input type="radio" (click)="selected(i,j)" [checked]="ischecked[j]">
   <img
-    *ngIf="imgsrc"
-    src="data:image/png;base64,{{ imgsrc }}"
+    *ngIf="i"
+    src="data:image/png;base64,{{ i }}"
     width="512"
     height="512"
   />
+</label>
+  </div>
 </div>
 
 <div *ngIf="admin">

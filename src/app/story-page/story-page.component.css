@@ -32,8 +32,34 @@ label {
   color: black;
 }
 
+/* HIDE RADIO */
+[type=radio] { 
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* IMAGE STYLES */
+[type=radio] + img {
+  cursor: pointer;
+}
+
+/* CHECKED STYLES */
+[type=radio]:checked + img {
+  outline: 2px solid #2196f3;
+}
+
+
 ::placeholder {
   font: 1em 'verdana';
+}
+
+.images {
+  display: grid;
+}
+.gallery {
+  display: flex;
 }
 
 #loading {
@@ -94,7 +120,7 @@ button:disabled {
 }
 
 img {
-  margin-left: 144px;
+  margin-left: 10px;
 }
 
 div {
