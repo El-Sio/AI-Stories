@@ -27,6 +27,10 @@ export class LoginComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/story';
   }
 
+  cancel(): void {
+    this.router.navigate(['collection']);
+  }
+  
   sendCreds() {
     this.loading = true;
     const creds = {

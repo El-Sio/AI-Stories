@@ -9,6 +9,7 @@ import {
   FineTune,
   completeStory,
 } from '../data-model';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-admin',
@@ -63,7 +64,8 @@ export class AdminComponent implements OnInit {
 
   logout(): void {
     this.authent.logout();
-    this.router.navigate(['collection']);
+    this.router.navigate(['']);
+    document.location.reload();
   }
 
   storyToTraining(story: completeStory): TraningData {

@@ -130,7 +130,8 @@ export class StoryPageComponent implements OnInit {
 
   logout(): void {
     this.authent.logout();
-    this.router.navigate(['collection']);
+    this.router.navigate(['']);
+    document.location.reload();
   }
 
   saveStory(): void {

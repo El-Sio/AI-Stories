@@ -60,7 +60,8 @@ export class CollectionComponent implements OnInit {
 
   logout(): void {
     this.authent.logout();
-    this.router.navigate(['/']);
+    this.router.navigate(['']);
+    document.location.reload();
   }
 
   gotoAdmin(): void {
