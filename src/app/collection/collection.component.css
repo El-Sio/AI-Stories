@@ -131,6 +131,14 @@ button:disabled {
   background-color: grey;
 }
 
+button.delete {
+  background-color: #ec3655;
+}
+
+button.delete:hover {
+  background-color: #ec3654c5;
+}
+
 img.standalone {
   margin-left: 144px;
 }

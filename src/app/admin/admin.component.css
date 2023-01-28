@@ -142,6 +142,14 @@ button {
   font-weight: bold;
 }
 
+button.delete {
+  background-color: #ec3655;
+}
+
+button.delete:hover {
+  background-color: #ec3654c5;
+}
+
 input[type='submit']:hover,
 button:hover {
   background-color: #45a049;

@@ -152,14 +152,12 @@
       <button [disabled]="!editingList[i]" (click)="toggle(i)">
         Enregistrer
       </button>
-      <button *ngIf="testing" (click)="testFunctions(i)">
-        Convertir histoire {{ i }}
-      </button>
+      <button class="delete" (click)="delete(i)">Supprimer</button>
     </div>
   </li>
 </ul>
 
 <div>
   <p>connecté en tant que : {{ login }}</p>
-  <button (click)="logout()">Logout</button>
+  <button class="delete" (click)="logout()">Logout</button>
 </div>

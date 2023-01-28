@@ -75,6 +75,14 @@ button:hover {
   background-color: #45a049;
 }
 
+button.delete {
+  background-color: #ec3655;
+}
+
+button.delete:hover {
+  background-color: #ec3654c5;
+}
+
 div {
   border-radius: 5px;
   background-color: #f2f2f2;

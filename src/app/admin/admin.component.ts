@@ -112,6 +112,7 @@ export class AdminComponent implements OnInit {
     this.openai.getCollectionData().subscribe(
       (res) => {
         this.storybook = res.slice(0, -1);
+        this.storybook.reverse();
         this.storybook.forEach((x, i) => (this.editingList[i] = false));
         this.message = 'données reçues';
         this.complete = true;
@@ -124,8 +125,16 @@ export class AdminComponent implements OnInit {
     );
   }
 
+  delete(index: number): void {
+    let result = confirm("êtes vous sur de vouloir supprimer cette histoire ?");
+    if (result) {
+    this.storybook.splice(index,1);
+    this.changed = true;
+    }
+  }
+
   saveStories(): void {
-    let newCollection = this.arrayToJsonLines(this.storybook);
+    let newCollection = this.arrayToJsonLines(this.storybook.reverse());
     this.openai.overwriteCollectionData(newCollection).subscribe(
       (res) => {
         this.storybook = [];
