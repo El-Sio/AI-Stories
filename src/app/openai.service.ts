@@ -41,6 +41,23 @@ export class OpenaiService {
     );
   }
 
+  saveAudio(data:any): Observable<any> {
+
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'audio/mpeg',
+      }),
+    };
+
+    let body = new FormData();
+    body.append('audioStream', data);
+
+    return this.http.post(
+      'https://japansio.info/fifi/saveAudio.php',
+      body
+    );
+  }
+
   UploadFile(token: string, file: string): Observable<TrainingFiles> {
     let timestamp = new Date().getTime().toString();
     let filename = 'myTrainingFile_' + timestamp + '.jsonl';

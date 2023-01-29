@@ -79,6 +79,10 @@
     <button *ngIf="isModified[index] && admin" (click)="cancel(index)">
       Annuler la modification
     </button>
+    <button *ngIf="admin" [disabled]="isAudioPlaying || isAudioLoading" (click)="testSpeech(currStory.text)">Lire l'histoire</button>
+    <div *ngIf="isAudioLoading" id="loading"></div>
+    <button *ngIf="admin" [disabled]="!isAudioPlaying" (click)="audioPause()">{{playStatus}}</button>
+    <button class="delete" *ngIf="admin" [disabled]="!isAudioPlaying" (click)="audioStop()">Arrêtez la lecture</button>
   </div>
 
   <div class="card">

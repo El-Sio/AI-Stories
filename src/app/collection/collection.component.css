@@ -139,6 +139,10 @@ button.delete:hover {
   background-color: #ec3654c5;
 }
 
+button.delete:disabled {
+  background-color: grey;
+}
+
 img.standalone {
   margin-left: 144px;
 }
@@ -258,6 +262,14 @@ div.card {
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
+}
+
+button.delete {
+  background-color: #ec3655;
+}
+
+button.delete:hover {
+  background-color: #ec3654c5;
 }
 
 /* Gallery Stuff*/

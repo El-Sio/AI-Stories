@@ -5,6 +5,8 @@ import { completeStory } from '../data-model';
 import { AppInitService } from '../app-init.service';
 import { AuthenticationService } from '../authentication.service';
 import { elementAt } from 'rxjs';
+//import * as AWS from 'aws-sdk';
+import AWS, { Polly, CognitoIdentityCredentials, Config } from 'aws-sdk';
 
 @Component({
   selector: 'app-collection',
@@ -38,6 +40,12 @@ export class CollectionComponent implements OnInit {
   public pageNumber = 0;
   public firstPage = true;
   public lastPage = false;
+  public isAudioPlaying = false;
+  public audioContext: AudioContext = new AudioContext();
+  public source: any;
+  public yourAudioData: any;
+  public isAudioLoading = false;
+  public playStatus = 'Mettre la lecture en pause';
 
   constructor(
     public openai: OpenaiService,
@@ -108,6 +116,16 @@ export class CollectionComponent implements OnInit {
   }
 
   setCurrStory(i: number) {
+    
+    this.isAudioPlaying = false;
+    this.yourAudioData = null;
+    if(this.source) {this.source.stop();}
+    if(this.audioContext.state === 'suspended') {
+      this.audioContext.resume().then((r) => {
+        console.log('resumed');
+        this.playStatus = 'Mettre la lecture en pause';
+      });}
+
     this.iscurrStorySet = true;
     this.bookEnd = false;
     this.bookStart = false;
@@ -307,6 +325,16 @@ export class CollectionComponent implements OnInit {
   }
 
   firstStory(): void {
+
+    this.isAudioPlaying = false;
+    this.yourAudioData = null;
+    if(this.source) {this.source.stop();}
+    if(this.audioContext.state === 'suspended') {
+      this.audioContext.resume().then((r) => {
+        console.log('resumed');
+        this.playStatus = 'Mettre la lecture en pause';
+      });}
+
     this.bookEnd = false;
     this.bookStart = true;
     this.index = 0;
@@ -319,6 +347,16 @@ export class CollectionComponent implements OnInit {
   }
 
   lastStory(): void {
+
+    this.isAudioPlaying = false;
+    this.yourAudioData = null;
+    if(this.source) {this.source.stop();}
+    if(this.audioContext.state === 'suspended') {
+      this.audioContext.resume().then((r) => {
+        console.log('resumed');
+        this.playStatus = 'Mettre la lecture en pause';
+      });}
+
     this.bookEnd = true;
     this.bookStart = false;
     this.index = this.booklength - 1;
@@ -331,6 +369,16 @@ export class CollectionComponent implements OnInit {
   }
 
   nextStory(): void {
+
+    this.isAudioPlaying = false;
+    this.yourAudioData = null;
+    if(this.source) {this.source.stop();}
+    if(this.audioContext.state === 'suspended') {
+      this.audioContext.resume().then((r) => {
+        console.log('resumed');
+        this.playStatus = 'Mettre la lecture en pause';
+      });}
+
     if (!this.bookEnd) {
       this.bookStart = false;
       this.index += 1;
@@ -347,6 +395,16 @@ export class CollectionComponent implements OnInit {
   }
 
   previousStory(): void {
+
+    this.isAudioPlaying = false;
+    this.yourAudioData = null;
+    if(this.source) {this.source.stop();}
+    if(this.audioContext.state === 'suspended') {
+      this.audioContext.resume().then((r) => {
+        console.log('resumed');
+        this.playStatus = 'Mettre la lecture en pause';
+      });}
+
     if (!this.bookStart) {
       this.bookEnd = false;
       this.index -= 1;
@@ -363,6 +421,16 @@ export class CollectionComponent implements OnInit {
   }
 
   randomStory(): void {
+
+    this.isAudioPlaying = false;
+    this.yourAudioData = null;
+    if(this.source) {this.source.stop();}
+    if(this.audioContext.state === 'suspended') {
+      this.audioContext.resume().then((r) => {
+        console.log('resumed');
+        this.playStatus = 'Mettre la lecture en pause';
+      });}
+
     this.bookEnd = false;
     this.bookStart = false;
     this.index = Math.floor(Math.random() * this.storyBook.length);
@@ -379,6 +447,105 @@ export class CollectionComponent implements OnInit {
       ' sur ' +
       this.storyBook.length.toString();
   }
+
+ testSpeech(story: string): void {
+
+if(!this.yourAudioData) {
+
+
+  console.log('pas encore de data audio');
+  this.isAudioLoading = true;
+
+    let client = new Polly({
+      region: 'eu-west-1', // Région
+      credentials: new CognitoIdentityCredentials({
+        IdentityPoolId: 'eu-west-1:c8369cf2-be05-4509-9d3e-4df5d0b8b8e2',
+})
+    });
+
+AWS.config.credentials = new CognitoIdentityCredentials({
+  IdentityPoolId: 'eu-west-1:c8369cf2-be05-4509-9d3e-4df5d0b8b8e2',
+});
+
+AWS.config.region = 'eu-west-1';
+
+    // Set the parameters
+let speechParams = {
+  OutputFormat: "mp3", // For example, 'mp3'
+  SampleRate: "16000", // For example, '16000
+  Text: story, // The 'speakText' function supplies this value
+  TextType: "text", // For example, "text"
+  VoiceId: "Remi", // For example, "Matthew"
+  Engine: "neural"
+};
+
+let audioContext = new AudioContext();
+
+let response =  client.synthesizeSpeech(speechParams).send((err, data) => {
+  console.log('error',err);
+
+  if(data.AudioStream) {
+
+    this.isAudioLoading = false;
+    this.yourAudioData = <Uint8Array>data.AudioStream;
+    this.isAudioPlaying = true;
+    let arrayBuffer = this.yourAudioData.buffer;
+
+    //let blobby = new Blob([arrayBuffer], {type: 'audio/mpeg'});
+    /*this.openai.saveAudio(data.AudioStream).subscribe(
+      (res) => console.log(res),
+      (err) => console.log(err)
+    );*/
+  
+
+    this.audioContext.decodeAudioData(arrayBuffer.slice(0), (audioBuffer) => {
+      this.source = this.audioContext.createBufferSource();
+      this.source.buffer = audioBuffer;
+      this.source.connect(this.audioContext.destination);
+      this.source.start();});
+  }
+});
+}
+
+if(this.yourAudioData) {
+
+  console.log('audio déjà reçu et en cours de lecture');
+
+  this.isAudioPlaying = true;
+  let arrayBuffer = this.yourAudioData.buffer;
+  
+  this.audioContext = new AudioContext();
+
+  this.audioContext.decodeAudioData(arrayBuffer.slice(0), (audioBuffer) => {
+    this.source = this.audioContext.createBufferSource();
+    this.source.buffer = audioBuffer;
+    this.source.connect(this.audioContext.destination);
+    this.source.start();});
+}
+
+}
+
+
+audioPause(): void {
+
+  if(this.audioContext.state === 'running') {
+    this.audioContext.suspend().then((r) => {
+      console.log('paused');
+      this.playStatus = 'Reprendre la lecture';
+    });
+  } else if(this.audioContext.state === 'suspended') {
+    this.audioContext.resume().then((r) => {
+      console.log('resumed');
+      this.playStatus = 'Mettre la lecture en pause';
+    });
+
+}
+}
+
+audioStop(): void {
+  this.isAudioPlaying = false;
+  this.source.stop();
+}
 
   gotoStories(): void {
     this.router.navigate(['story']);
