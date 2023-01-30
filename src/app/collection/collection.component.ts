@@ -45,7 +45,8 @@ export class CollectionComponent implements OnInit {
   public source: any;
   public yourAudioData: any;
   public isAudioLoading = false;
-  public playStatus = 'Mettre la lecture en pause';
+  public playStatus = 'pause';
+  public soundStatus = 'play';
   public aws = '';
 
   constructor(
@@ -125,7 +126,7 @@ export class CollectionComponent implements OnInit {
     if(this.audioContext.state === 'suspended') {
       this.audioContext.resume().then((r) => {
         console.log('resumed');
-        this.playStatus = 'Mettre la lecture en pause';
+        this.playStatus = 'pause';
       });}
 
     this.iscurrStorySet = true;
@@ -334,7 +335,7 @@ export class CollectionComponent implements OnInit {
     if(this.audioContext.state === 'suspended') {
       this.audioContext.resume().then((r) => {
         console.log('resumed');
-        this.playStatus = 'Mettre la lecture en pause';
+        this.playStatus = 'pause';
       });}
 
     this.bookEnd = false;
@@ -356,7 +357,7 @@ export class CollectionComponent implements OnInit {
     if(this.audioContext.state === 'suspended') {
       this.audioContext.resume().then((r) => {
         console.log('resumed');
-        this.playStatus = 'Mettre la lecture en pause';
+        this.playStatus = 'pause';
       });}
 
     this.bookEnd = true;
@@ -378,7 +379,7 @@ export class CollectionComponent implements OnInit {
     if(this.audioContext.state === 'suspended') {
       this.audioContext.resume().then((r) => {
         console.log('resumed');
-        this.playStatus = 'Mettre la lecture en pause';
+        this.playStatus = 'pause';
       });}
 
     if (!this.bookEnd) {
@@ -404,7 +405,7 @@ export class CollectionComponent implements OnInit {
     if(this.audioContext.state === 'suspended') {
       this.audioContext.resume().then((r) => {
         console.log('resumed');
-        this.playStatus = 'Mettre la lecture en pause';
+        this.playStatus = 'pause';
       });}
 
     if (!this.bookStart) {
@@ -430,7 +431,7 @@ export class CollectionComponent implements OnInit {
     if(this.audioContext.state === 'suspended') {
       this.audioContext.resume().then((r) => {
         console.log('resumed');
-        this.playStatus = 'Mettre la lecture en pause';
+        this.playStatus = 'pause';
       });}
 
     this.bookEnd = false;
@@ -506,6 +507,9 @@ let response =  client.synthesizeSpeech(speechParams).send((err, data) => {
       this.source.connect(this.audioContext.destination);
       this.source.start();});
   }
+
+  this.soundStatus = 'back';
+
 });
 }
 
@@ -525,6 +529,8 @@ if(this.yourAudioData) {
     this.source.start();});
 }
 
+this.soundStatus = 'back';
+
 }
 
 
@@ -533,12 +539,12 @@ audioPause(): void {
   if(this.audioContext.state === 'running') {
     this.audioContext.suspend().then((r) => {
       console.log('paused');
-      this.playStatus = 'Reprendre la lecture';
+      this.playStatus = 'play';
     });
   } else if(this.audioContext.state === 'suspended') {
     this.audioContext.resume().then((r) => {
       console.log('resumed');
-      this.playStatus = 'Mettre la lecture en pause';
+      this.playStatus = 'pause';
     });
 
 }
@@ -546,7 +552,8 @@ audioPause(): void {
 
 audioStop(): void {
   this.isAudioPlaying = false;
-  this.playStatus = 'Mettre la lecture en pause'
+  this.playStatus = 'pause';
+  this.soundStatus = 'play';
   this.source.stop();
 }
 

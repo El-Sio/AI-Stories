@@ -79,10 +79,11 @@
     <button *ngIf="isModified[index] && admin" (click)="cancel(index)">
       Annuler la modification
     </button>
-    <button *ngIf="admin" [disabled]="isAudioPlaying || isAudioLoading" (click)="testSpeech(currStory.text)">Lire l'histoire</button>
-    <div *ngIf="isAudioLoading" id="loading"></div>
-    <button *ngIf="admin" [disabled]="!isAudioPlaying" (click)="audioPause()">{{playStatus}}</button>
-    <button class="delete" *ngIf="admin" [disabled]="!isAudioPlaying" (click)="audioStop()">Arrêtez la lecture</button>
+    <span class="menu">
+    <button class="play" *ngIf="admin" [disabled]="isAudioPlaying || isAudioLoading" (click)="testSpeech(currStory.text)"><span class="menu"><img src="assets/{{soundStatus}}.png" width="24" height="24"><div *ngIf="isAudioLoading" id="small_loading"></div></span></button>
+    <button class="pause" *ngIf="admin" [disabled]="!isAudioPlaying" (click)="audioPause()"><img src="assets/{{playStatus}}.png" width="24" height="24"></button>
+    <button class="stop" *ngIf="admin" [disabled]="!isAudioPlaying" (click)="audioStop()"><img src="assets/stop.png" width="24" height="24"></button>
+    </span>
   </div>
 
   <div class="card">
