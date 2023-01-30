@@ -46,6 +46,7 @@ export class CollectionComponent implements OnInit {
   public yourAudioData: any;
   public isAudioLoading = false;
   public playStatus = 'Mettre la lecture en pause';
+  public aws = '';
 
   constructor(
     public openai: OpenaiService,
@@ -58,6 +59,7 @@ export class CollectionComponent implements OnInit {
     this.admin = AppInitService.currentUser?.isAdmin;
     this.token = AppInitService.currentUser?.message;
     this.login = AppInitService.currentUser?.user;
+    this.aws = AppInitService.currentUser?.aws;
 
     this.getStories();
 
@@ -459,12 +461,12 @@ if(!this.yourAudioData) {
     let client = new Polly({
       region: 'eu-west-1', // Région
       credentials: new CognitoIdentityCredentials({
-        IdentityPoolId: 'eu-west-1:c8369cf2-be05-4509-9d3e-4df5d0b8b8e2',
+        IdentityPoolId: this.aws,
 })
     });
 
 AWS.config.credentials = new CognitoIdentityCredentials({
-  IdentityPoolId: 'eu-west-1:c8369cf2-be05-4509-9d3e-4df5d0b8b8e2',
+  IdentityPoolId: this.aws,
 });
 
 AWS.config.region = 'eu-west-1';
@@ -544,6 +546,7 @@ audioPause(): void {
 
 audioStop(): void {
   this.isAudioPlaying = false;
+  this.playStatus = 'Mettre la lecture en pause'
   this.source.stop();
 }
 

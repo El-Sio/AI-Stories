@@ -105,4 +105,5 @@ export interface Authent {
   isAdmin: Boolean;
   hasViz: Boolean;
   message: string;
+  aws: string;
 }

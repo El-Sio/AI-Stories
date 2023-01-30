@@ -35,6 +35,7 @@ export class AuthenticationService {
           hasViz: res.hasViz,
           access: res.access,
           message: res.message,
+          aws: res.aws
         };
         sessionStorage.setItem('currentFluidUser', JSON.stringify(auth));
         this.currentUserSubject.next(auth);
