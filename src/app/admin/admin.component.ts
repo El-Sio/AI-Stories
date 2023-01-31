@@ -102,6 +102,7 @@ export class AdminComponent implements OnInit {
       companion: companion,
       text: training.completion,
       image: 'https://japansio.info/fifi/uploads/generic.png',
+      audio: 'noAudio'
     };
     return story;
   }

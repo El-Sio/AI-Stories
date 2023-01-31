@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OpenaiService } from '../openai.service';
 import { completeStory } from '../data-model';
@@ -13,6 +13,7 @@ import AWS, { Polly, CognitoIdentityCredentials, Config } from 'aws-sdk';
   templateUrl: './collection.component.html',
   styleUrls: ['./collection.component.css'],
 })
+
 export class CollectionComponent implements OnInit {
   public storyBook: completeStory[] = [];
   public storyBookLoaded = false;
@@ -47,7 +48,9 @@ export class CollectionComponent implements OnInit {
   public isAudioLoading = false;
   public playStatus = 'pause';
   public soundStatus = 'play';
+  public isAudioStarted = false;
   public aws = '';
+  public hasAudio: boolean[] = [];
 
   constructor(
     public openai: OpenaiService,
@@ -55,6 +58,8 @@ export class CollectionComponent implements OnInit {
     public authent: AuthenticationService,
     private route: ActivatedRoute
   ) {}
+
+  @ViewChild('player') audioPlayerRef: ElementRef;
 
   ngOnInit() {
     this.admin = AppInitService.currentUser?.isAdmin;
@@ -122,7 +127,10 @@ export class CollectionComponent implements OnInit {
     
     this.isAudioPlaying = false;
     this.yourAudioData = null;
-    if(this.source) {this.source.stop();}
+    if(this.source) {
+      this.source.stop();
+      this.soundStatus = 'play';
+    }
     if(this.audioContext.state === 'suspended') {
       this.audioContext.resume().then((r) => {
         console.log('resumed');
@@ -140,6 +148,13 @@ export class CollectionComponent implements OnInit {
       this.bookStart = true;
     }
     this.currStory = this.storyBook[this.index];
+
+    this.audioPlayerRef.nativeElement.load();
+    this.isAudioPlaying = false;
+    this.isAudioStarted = false;
+    this.soundStatus = 'play';
+    this.playStatus = 'pause';
+
     this.message =
       'Histoire ' +
       (this.index + 1).toString() +
@@ -193,8 +208,9 @@ export class CollectionComponent implements OnInit {
         this.pageNumber = this.Pages.length;
         this.currentpage = this.Pages[0];
         this.currStory = this.storyBook[0];
-        this.index = this.booklength - 1;
-        this.bookEnd = true;
+        this.index = 0;
+        this.bookStart = true;
+        this.bookEnd = false;
         this.storyBookLoaded = true;
         this.message = this.message =
           'Histoire ' +
@@ -206,6 +222,12 @@ export class CollectionComponent implements OnInit {
           this.popupclass.push('popupclosed');
           if (s.image === 'https://japansio.info/fifi/uploads/generic.png') {
             this.isGeneric[i] = true;
+          }
+          if (!s.audio) {
+            this.hasAudio[i] = false;
+          }
+          if (s.audio) {
+            this.hasAudio[i] = true;
           }
         });
       },
@@ -250,7 +272,14 @@ export class CollectionComponent implements OnInit {
           if (s.image === 'https://japansio.info/fifi/uploads/generic.png') {
             this.isGeneric[i] = true;
           }
+          if (!s.audio) {
+            this.hasAudio[i] = false;
+          }
+          if (s.audio) {
+            this.hasAudio[i] = true;
+          }
         });
+
       },
       (err) => {
         this.storyBookLoading = false;
@@ -264,6 +293,10 @@ export class CollectionComponent implements OnInit {
   }
 
   saveStories(): void {
+    if(this.source) {
+      this.source.stop();
+      this.soundStatus = 'play';
+    }
     let newCollection = this.arrayToJsonLines(this.storyBook.reverse());
     this.openai.overwriteCollectionData(newCollection).subscribe(
       (res) => {
@@ -331,7 +364,10 @@ export class CollectionComponent implements OnInit {
 
     this.isAudioPlaying = false;
     this.yourAudioData = null;
-    if(this.source) {this.source.stop();}
+    if(this.source) {
+      this.source.stop();
+      this.soundStatus = 'play';
+    }
     if(this.audioContext.state === 'suspended') {
       this.audioContext.resume().then((r) => {
         console.log('resumed');
@@ -342,6 +378,11 @@ export class CollectionComponent implements OnInit {
     this.bookStart = true;
     this.index = 0;
     this.currStory = this.storyBook[this.index];
+    this.audioPlayerRef.nativeElement.load();
+    this.isAudioPlaying = false;
+    this.isAudioStarted = false;
+    this.soundStatus = 'play';
+    this.playStatus = 'pause';
     this.message =
       'Histoire ' +
       (this.index + 1).toString() +
@@ -353,7 +394,10 @@ export class CollectionComponent implements OnInit {
 
     this.isAudioPlaying = false;
     this.yourAudioData = null;
-    if(this.source) {this.source.stop();}
+    if(this.source) {
+      this.source.stop();
+      this.soundStatus = 'play';
+    }
     if(this.audioContext.state === 'suspended') {
       this.audioContext.resume().then((r) => {
         console.log('resumed');
@@ -364,6 +408,11 @@ export class CollectionComponent implements OnInit {
     this.bookStart = false;
     this.index = this.booklength - 1;
     this.currStory = this.storyBook[this.index];
+    this.audioPlayerRef.nativeElement.load();
+    this.isAudioPlaying = false;
+    this.isAudioStarted = false;
+    this.soundStatus = 'play';
+    this.playStatus = 'pause';
     this.message =
       'Histoire ' +
       (this.index + 1).toString() +
@@ -375,7 +424,10 @@ export class CollectionComponent implements OnInit {
 
     this.isAudioPlaying = false;
     this.yourAudioData = null;
-    if(this.source) {this.source.stop();}
+    if(this.source) {
+      this.source.stop();
+      this.soundStatus = 'play';
+    }
     if(this.audioContext.state === 'suspended') {
       this.audioContext.resume().then((r) => {
         console.log('resumed');
@@ -389,6 +441,11 @@ export class CollectionComponent implements OnInit {
         this.bookEnd = true;
       }
       this.currStory = this.storyBook[this.index];
+      this.audioPlayerRef.nativeElement.load();
+      this.isAudioPlaying = false;
+      this.isAudioStarted = false;
+      this.soundStatus = 'play';
+      this.playStatus = 'pause';
       this.message =
         'Histoire ' +
         (this.index + 1).toString() +
@@ -401,7 +458,10 @@ export class CollectionComponent implements OnInit {
 
     this.isAudioPlaying = false;
     this.yourAudioData = null;
-    if(this.source) {this.source.stop();}
+    if(this.source) {
+      this.source.stop();
+      this.soundStatus = 'play';
+    }
     if(this.audioContext.state === 'suspended') {
       this.audioContext.resume().then((r) => {
         console.log('resumed');
@@ -415,6 +475,11 @@ export class CollectionComponent implements OnInit {
         this.bookStart = true;
       }
       this.currStory = this.storyBook[this.index];
+      this.audioPlayerRef.nativeElement.load();
+      this.isAudioPlaying = false;
+      this.isAudioStarted = false;
+      this.soundStatus = 'play';
+      this.playStatus = 'pause';
       this.message =
         ' Histoire ' +
         (this.index + 1).toString() +
@@ -427,7 +492,10 @@ export class CollectionComponent implements OnInit {
 
     this.isAudioPlaying = false;
     this.yourAudioData = null;
-    if(this.source) {this.source.stop();}
+    if(this.source) {
+      this.source.stop();
+      this.soundStatus = 'play';
+    }
     if(this.audioContext.state === 'suspended') {
       this.audioContext.resume().then((r) => {
         console.log('resumed');
@@ -444,6 +512,11 @@ export class CollectionComponent implements OnInit {
       this.bookStart = true;
     }
     this.currStory = this.storyBook[this.index];
+    this.audioPlayerRef.nativeElement.load();
+    this.isAudioPlaying = false;
+    this.isAudioStarted = false;
+    this.soundStatus = 'play';
+    this.playStatus = 'pause';
     this.message =
       'Histoire ' +
       (this.index + 1).toString() +
@@ -451,7 +524,7 @@ export class CollectionComponent implements OnInit {
       this.storyBook.length.toString();
   }
 
- testSpeech(story: string): void {
+ testSpeech(story: string, i: number): void {
 
 if(!this.yourAudioData) {
 
@@ -494,11 +567,15 @@ let response =  client.synthesizeSpeech(speechParams).send((err, data) => {
     this.isAudioPlaying = true;
     let arrayBuffer = this.yourAudioData.buffer;
 
-    //let blobby = new Blob([arrayBuffer], {type: 'audio/mpeg'});
-    /*this.openai.saveAudio(data.AudioStream).subscribe(
-      (res) => console.log(res),
+    this.openai.saveAudio(arrayBuffer).subscribe(
+      (res) => {
+        console.log('getting audio for story'+i, res);
+        this.storyBook[i].audio = res.url;
+        this.isModified[i] = true;
+        this.hasAudio[i] = true;
+      },
       (err) => console.log(err)
-    );*/
+    );
   
 
     this.audioContext.decodeAudioData(arrayBuffer.slice(0), (audioBuffer) => {
@@ -533,7 +610,6 @@ this.soundStatus = 'back';
 
 }
 
-
 audioPause(): void {
 
   if(this.audioContext.state === 'running') {
@@ -555,6 +631,35 @@ audioStop(): void {
   this.playStatus = 'pause';
   this.soundStatus = 'play';
   this.source.stop();
+}
+
+playerPlay(): void {
+  this.audioPlayerRef.nativeElement.load();
+  this.audioPlayerRef.nativeElement.play();
+  this.isAudioPlaying = true;
+  this.isAudioStarted = true;
+  this.soundStatus = 'back';
+}
+
+playerPause(): void {
+  if(!this.audioPlayerRef.nativeElement.paused) {
+    this.audioPlayerRef.nativeElement.pause();
+    this.isAudioPlaying = false;
+    this.playStatus = 'play';
+  } else if(this.audioPlayerRef.nativeElement.paused) {
+    this.audioPlayerRef.nativeElement.play();
+    this.isAudioPlaying = true;
+    this.playStatus = 'pause';
+  }
+}
+
+playerStop(): void {
+  this.audioPlayerRef.nativeElement.pause();
+  this.audioPlayerRef.nativeElement.load();
+  this.isAudioPlaying = false;
+  this.isAudioStarted = false;
+  this.playStatus = 'pause';
+  this.soundStatus = 'play';
 }
 
   gotoStories(): void {

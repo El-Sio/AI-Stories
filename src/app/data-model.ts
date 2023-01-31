@@ -24,6 +24,7 @@ export interface completeStory {
   companion: string;
   text: string;
   image: string;
+  audio: string;
 }
 
 export interface Model {
