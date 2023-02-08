@@ -48,7 +48,9 @@
       {{ currStory.purpose }}
       <span *ngIf="currStory?.companion">avec {{ currStory.companion }}</span>
     </h2>
-    <p>{{ currStory.text }}</p>
+    <p>
+    <span *ngFor="let word of currWordArray; let k = index" [ngClass]="{'highlight':highlights[k]}">{{word}} </span>
+    </p>
   </div>
   <div class="card">
     <div *ngIf="imagechanging" id="loading"></div>
@@ -70,7 +72,7 @@
     <audio #player src="{{currStory.audio}}"></audio>
     <div>  
     <span class="menu" *ngIf="currStory.audio && !isModified[index]">
-        <button class="play" [disabled]="isAudioStarted" (click)="playerPlay()"><img src="assets/{{soundStatus}}.png" width="24" height="24"></button>
+        <button class="play" [disabled]="isAudioStarted || isAudioLoading" (click)="playerPlay()"><img src="assets/{{soundStatus}}.png" width="24" height="24"><div *ngIf="isAudioLoading" id="small_loading"></div></button>
         <button class="pause" [disabled]="!isAudioPlaying && !isAudioStarted" (click)="playerPause()"><img src="assets/{{playStatus}}.png" width="24" height="24"></button>
         <button class="stop" [disabled]="!isAudioStarted" (click)="playerStop()"><img src="assets/stop.png" width="24" height="24"></button>
         </span>
@@ -88,10 +90,10 @@
     <button *ngIf="isModified[index] && admin" (click)="cancel(index)">
       Annuler la modification
     </button>
-    <span class="menu" *ngIf="!hasAudio[index]  || isModified[index]">
-    <button class="play" *ngIf="admin && (!hasAudio[index] || isModified[index])" [disabled]="isAudioPlaying || isAudioLoading" (click)="testSpeech(currStory.text, index)"><span class="menu"><img src="assets/{{soundStatus}}.png" width="24" height="24"><div *ngIf="isAudioLoading" id="small_loading"></div></span></button>
-    <button class="pause" *ngIf="admin && (!hasAudio[index] || isModified[index])" [disabled]="!isAudioPlaying" (click)="audioPause()"><img src="assets/{{playStatus}}.png" width="24" height="24"></button>
-    <button class="stop" *ngIf="admin && (!hasAudio[index] || isModified[index])" [disabled]="!isAudioPlaying" (click)="audioStop()"><img src="assets/stop.png" width="24" height="24"></button>
+    <span class="menu" *ngIf="!hasAudio[index]  || !hasSpeechMarks[index] || isModified[index]">
+    <button class="play" *ngIf="admin && (!hasAudio[index] || !hasSpeechMarks[index] || isModified[index])" [disabled]="isAudioPlaying || isAudioLoading" (click)="testSpeech(currStory.text, index)"><span class="menu"><img src="assets/{{soundStatus}}.png" width="24" height="24"><div *ngIf="isAudioLoading" id="small_loading"></div></span></button>
+    <button class="pause" *ngIf="admin && (!hasAudio[index] || !hasSpeechMarks[index]|| isModified[index])" [disabled]="!isAudioPlaying" (click)="audioPause()"><img src="assets/{{playStatus}}.png" width="24" height="24"></button>
+    <button class="stop" *ngIf="admin && (!hasAudio[index] || !hasSpeechMarks[index] || isModified[index])" [disabled]="!isAudioPlaying" (click)="audioStop()"><img src="assets/stop.png" width="24" height="24"></button>
     </span>
   </div>
 

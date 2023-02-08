@@ -148,9 +148,15 @@
         [(ngModel)]="story.text"
       ></textarea>
       <textarea
+      class="small"
       [disabled]="!editingList[i]"
       [(ngModel)]="story.audio"
     ></textarea>
+    <textarea
+    class="small"
+    [disabled]="!editingList[i]"
+    [(ngModel)]="story.speechMarks"
+  ></textarea>
       <br />
       <button [disabled]="editingList[i]" (click)="toggle(i)">Modifier</button>
       <button [disabled]="!editingList[i]" (click)="toggle(i)">

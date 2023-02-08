@@ -18,6 +18,14 @@ export interface ModelList {
   data: Model[];
 }
 
+export interface speechTiming {
+  time:number;
+  type:string;
+  start:number;
+  end:number;
+  value:string;
+}
+
 export interface completeStory {
   location: string;
   purpose: string;
@@ -25,6 +33,7 @@ export interface completeStory {
   text: string;
   image: string;
   audio: string;
+  speechMarks: string;
 }
 
 export interface Model {

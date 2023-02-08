@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OpenaiService } from '../openai.service';
-import { completeStory } from '../data-model';
+import { completeStory, speechTiming } from '../data-model';
 import { AppInitService } from '../app-init.service';
 import { AuthenticationService } from '../authentication.service';
-import { elementAt } from 'rxjs';
 //import * as AWS from 'aws-sdk';
 import AWS, { Polly, CognitoIdentityCredentials, Config } from 'aws-sdk';
 
@@ -51,6 +50,13 @@ export class CollectionComponent implements OnInit {
   public isAudioStarted = false;
   public aws = '';
   public hasAudio: boolean[] = [];
+  public hasSpeechMarks: boolean[] = [];
+  public currWordArray = [];
+  public highlights = [];
+  public isHighlighting = false;
+  public hightlightindex = 0;
+  public speechArray: speechTiming[] = [];
+  public currStorySpeechMarks: speechTiming[] = [];
 
   constructor(
     public openai: OpenaiService,
@@ -148,6 +154,8 @@ export class CollectionComponent implements OnInit {
       this.bookStart = true;
     }
     this.currStory = this.storyBook[this.index];
+    this.currWordArray = this.currStory.text.split(" ");
+    this.currWordArray.forEach((w,i) => this.highlights[i] = false);
 
     this.audioPlayerRef.nativeElement.load();
     this.isAudioPlaying = false;
@@ -208,6 +216,10 @@ export class CollectionComponent implements OnInit {
         this.pageNumber = this.Pages.length;
         this.currentpage = this.Pages[0];
         this.currStory = this.storyBook[0];
+        
+        this.currWordArray = this.currStory.text.split(" ");
+        this.currWordArray.forEach((w,i) => this.highlights[i] = false);
+
         this.index = 0;
         this.bookStart = true;
         this.bookEnd = false;
@@ -219,7 +231,7 @@ export class CollectionComponent implements OnInit {
           this.storyBook.length.toString();
 
         this.storyBook.forEach((s, i) => {
-          this.popupclass.push('popupclosed');
+
           if (s.image === 'https://japansio.info/fifi/uploads/generic.png') {
             this.isGeneric[i] = true;
           }
@@ -228,6 +240,12 @@ export class CollectionComponent implements OnInit {
           }
           if (s.audio) {
             this.hasAudio[i] = true;
+          }
+          if(s.speechMarks) {
+            this.hasSpeechMarks[i] = true;
+          }
+          if(!s.speechMarks) {
+            this.hasSpeechMarks[i] = false;
           }
         });
       },
@@ -258,6 +276,10 @@ export class CollectionComponent implements OnInit {
         this.currentpage = this.Pages[Math.floor(i/this.STORIES_PER_PAGE)];
 
         this.currStory = this.storyBook[i];
+
+        this.currWordArray = this.currStory.text.split(" ");
+        this.currWordArray.forEach((w,i) => this.highlights[i] = false);
+
         this.index = i;
         this.bookEnd = this.booklength - 1 === i;
         this.bookStart = i === 0;
@@ -277,6 +299,12 @@ export class CollectionComponent implements OnInit {
           }
           if (s.audio) {
             this.hasAudio[i] = true;
+          }
+          if(s.speechMarks) {
+            this.hasSpeechMarks[i] = true;
+          }
+          if(!s.speechMarks) {
+            this.hasSpeechMarks[i] = false;
           }
         });
 
@@ -378,6 +406,10 @@ export class CollectionComponent implements OnInit {
     this.bookStart = true;
     this.index = 0;
     this.currStory = this.storyBook[this.index];
+
+    this.currWordArray = this.currStory.text.split(" ");
+    this.currWordArray.forEach((w,i) => this.highlights[i] = false);
+
     this.audioPlayerRef.nativeElement.load();
     this.isAudioPlaying = false;
     this.isAudioStarted = false;
@@ -408,6 +440,10 @@ export class CollectionComponent implements OnInit {
     this.bookStart = false;
     this.index = this.booklength - 1;
     this.currStory = this.storyBook[this.index];
+
+    this.currWordArray = this.currStory.text.split(" ");
+    this.currWordArray.forEach((w,i) => this.highlights[i] = false);
+
     this.audioPlayerRef.nativeElement.load();
     this.isAudioPlaying = false;
     this.isAudioStarted = false;
@@ -441,6 +477,10 @@ export class CollectionComponent implements OnInit {
         this.bookEnd = true;
       }
       this.currStory = this.storyBook[this.index];
+
+      this.currWordArray = this.currStory.text.split(" ");
+      this.currWordArray.forEach((w,i) => this.highlights[i] = false);
+
       this.audioPlayerRef.nativeElement.load();
       this.isAudioPlaying = false;
       this.isAudioStarted = false;
@@ -475,6 +515,10 @@ export class CollectionComponent implements OnInit {
         this.bookStart = true;
       }
       this.currStory = this.storyBook[this.index];
+
+      this.currWordArray = this.currStory.text.split(" ");
+      this.currWordArray.forEach((w,i) => this.highlights[i] = false);
+
       this.audioPlayerRef.nativeElement.load();
       this.isAudioPlaying = false;
       this.isAudioStarted = false;
@@ -512,6 +556,10 @@ export class CollectionComponent implements OnInit {
       this.bookStart = true;
     }
     this.currStory = this.storyBook[this.index];
+
+    this.currWordArray = this.currStory.text.split(" ");
+    this.currWordArray.forEach((w,i) => this.highlights[i] = false);
+
     this.audioPlayerRef.nativeElement.load();
     this.isAudioPlaying = false;
     this.isAudioStarted = false;
@@ -557,9 +605,21 @@ let speechParams = {
 
 let audioContext = new AudioContext();
 
-let response =  client.synthesizeSpeech(speechParams).send((err, data) => {
-  console.log('error',err);
+let speechParamsJson = {
+  OutputFormat: "json", // For example, 'mp3'
+  SpeechMarkTypes: ["sentence", "word"],
+  SampleRate: "16000", // For example, '16000
+  Text: story, // The 'speakText' function supplies this value
+  TextType: "text", // For example, "text"
+  VoiceId: "Remi", // For example, "Matthew"
+  Engine: "neural"
+}
 
+
+//only get speechmarks if audio is already existing
+if(!this.hasAudio[i]) {
+  let response =  client.synthesizeSpeech(speechParams).send((err, data) => {
+  console.log('error',err);
   if(data.AudioStream) {
 
     this.isAudioLoading = false;
@@ -590,6 +650,38 @@ let response =  client.synthesizeSpeech(speechParams).send((err, data) => {
 });
 }
 
+// get Speechmarks if none exist 
+
+if(!this.hasSpeechMarks[i]) {
+let jsonresponse = client.synthesizeSpeech(speechParamsJson).send((error, json) => {
+  console.log('error', error);
+  let jsondata = <Uint8Array>json.AudioStream;
+  let jsonstring = Buffer.from(jsondata).toString('utf8');
+  let objectarray = jsonstring.split("\n").slice(0, -1);
+  this.speechArray = [];
+  objectarray.forEach(i => 
+    {
+      this.speechArray.push(JSON.parse(i));
+    });
+
+  this.speechArray = this.speechArray.filter(i => i.type === "word");
+
+  this.openai.saveSpeechMarks(JSON.stringify(this.speechArray)).subscribe(
+    (res) => {
+      console.log('getting spechmarks for story'+i, res);
+      this.storyBook[i].speechMarks = res.url;
+      this.isModified[i] = true;
+      this.hasSpeechMarks[i] = true;
+      this.isAudioLoading = false;
+    },
+    (err) => {console.log(err)}
+  );
+
+});
+}
+
+}
+
 if(this.yourAudioData) {
 
   console.log('audio déjà reçu et en cours de lecture');
@@ -609,7 +701,6 @@ if(this.yourAudioData) {
 this.soundStatus = 'back';
 
 }
-
 audioPause(): void {
 
   if(this.audioContext.state === 'running') {
@@ -634,21 +725,53 @@ audioStop(): void {
 }
 
 playerPlay(): void {
-  this.audioPlayerRef.nativeElement.load();
-  this.audioPlayerRef.nativeElement.play();
-  this.isAudioPlaying = true;
-  this.isAudioStarted = true;
-  this.soundStatus = 'back';
+
+  this.isAudioLoading = true;
+  this.openai.getSpeechMarks(this.currStory.speechMarks).subscribe(
+    (res) => {
+      this.isAudioLoading = false;
+      //console.log(res);
+      this.currStorySpeechMarks = res;
+      this.audioPlayerRef.nativeElement.load();
+      this.audioPlayerRef.nativeElement.play();
+      this.isAudioPlaying = true;
+      this.isAudioStarted = true;
+      this.soundStatus = 'back';
+      this.hightlightindex = 0;
+      this.isHighlighting = true;
+      this.trueHighlightStart();
+    },
+    (err) => {
+      console.log('no speechmark, improvising');
+      this.isAudioLoading = false;
+      this.audioPlayerRef.nativeElement.load();
+      this.audioPlayerRef.nativeElement.play();
+      this.isAudioPlaying = true;
+      this.isAudioStarted = true;
+      this.soundStatus = 'back';
+      this.hightlightindex = 0;
+      this.isHighlighting = true;
+      this.highlightStart();
+  }
+  );
 }
 
 playerPause(): void {
   if(!this.audioPlayerRef.nativeElement.paused) {
     this.audioPlayerRef.nativeElement.pause();
     this.isAudioPlaying = false;
+    this.isHighlighting = false;
     this.playStatus = 'play';
   } else if(this.audioPlayerRef.nativeElement.paused) {
     this.audioPlayerRef.nativeElement.play();
     this.isAudioPlaying = true;
+    this.isHighlighting = true;
+    if(this.currStorySpeechMarks.length > 0) {
+      this.trueHighlightStartFrom(this.hightlightindex);
+    } 
+    else {
+      this.highlightStartFrom(this.hightlightindex);
+    }
     this.playStatus = 'pause';
   }
 }
@@ -658,8 +781,96 @@ playerStop(): void {
   this.audioPlayerRef.nativeElement.load();
   this.isAudioPlaying = false;
   this.isAudioStarted = false;
+  this.isHighlighting = false;
+  this.hightlightindex = 0;
+  this.highlights.forEach((w,i) => this.highlights[i] = false);
   this.playStatus = 'pause';
   this.soundStatus = 'play';
+}
+
+async highlightStart() {
+
+  if(this.highlights) {
+    for(let i=0; i < this.highlights.length; i++) {
+      if(!this.isHighlighting) { 
+        this.hightlightindex = i;
+        break }
+      if(i >0) {this.highlights[i-1] = false}
+      this.highlights[i] = true;
+      if(this.currWordArray[i].includes(".")) {
+        console.log('point');
+        await this.delay(500);
+      } else if(this.currWordArray[i].includes(",")) {
+        console.log('virgule');
+        await this.delay(400);
+      } else {
+        if(this.currWordArray[i].length < 6) {await this.delay(250);}
+        else {await this.delay(300);}
+      }
+    }
+  }
+}
+
+async highlightStartFrom(s: number) {
+  if(this.highlights) {
+    for(let i=s; i < this.highlights.length; i++) {
+      if(!this.isHighlighting) { 
+        this.hightlightindex = i;
+        break }
+        if(i >0) {this.highlights[i-1] = false}
+        this.highlights[i] = true;
+        if(this.currWordArray[i].includes(".")) {
+          console.log('point');
+          await this.delay(500);
+        } else if(this.currWordArray[i].includes(",")) {
+          console.log('virgule');
+          await this.delay(400);
+        } else {
+          if(this.currWordArray[i].length < 6) {await this.delay(250);}
+          else {await this.delay(300);}
+        }
+    }
+  }
+}
+
+async trueHighlightStart() {
+  if(this.highlights && this.currStorySpeechMarks) {
+    for(let i=0; i<this.highlights.length; i++) {
+      if(!this.isHighlighting) {
+        this.hightlightindex = i;
+        break}
+      if(i > 0) {this.highlights[i-1] = false}
+      this.highlights[i] = true;
+      if(i<this.currStorySpeechMarks.length-1) {
+        await this.delay(this.currStorySpeechMarks[i+1].time - this.currStorySpeechMarks[i].time);
+      } else {
+        await this.delay(this.currStorySpeechMarks[i].time);
+      }
+    }
+  }
+}
+
+async trueHighlightStartFrom(s: number) {
+  if(this.highlights && this.currStorySpeechMarks) {
+    for(let i=s; i<this.highlights.length; i++) {
+      if(!this.isHighlighting) {
+        this.hightlightindex = i;
+        break}
+      if(i > 0) {this.highlights[i-1] = false}
+      this.highlights[i] = true;
+      if(i < this.currStorySpeechMarks.length-1) {
+        await this.delay(this.currStorySpeechMarks[i+1].time - this.currStorySpeechMarks[i].time);
+      } else {
+        await this.delay(this.currStorySpeechMarks[i].time);
+      }
+    }
+  }
+}
+
+delay(ms) {
+  return new Promise((resolve) => {
+    return setTimeout(resolve, ms);
+  });
 }
 
   gotoStories(): void {

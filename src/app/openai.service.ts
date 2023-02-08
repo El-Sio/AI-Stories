@@ -12,6 +12,7 @@ import {
   FineTune,
   ModelList,
   completeStory,
+  speechTiming
 } from './data-model';
 import { AppInitService } from './app-init.service';
 import { User, Authent } from './data-model';
@@ -156,6 +157,16 @@ export class OpenaiService {
       'https://japansio.info/api/overwriteCollectionData.php',
       data
     );
+  }
+
+  saveSpeechMarks(data: string): Observable<any> {
+    return this.http.post(
+      'https://japansio.info/fifi/saveSpeechMarks.php',
+      data);
+  }
+
+  getSpeechMarks(url: string): Observable<speechTiming[]> {
+    return this.http.get<speechTiming[]>(url);
   }
 
   getTrainingData(): Observable<TraningData[]> {

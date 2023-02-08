@@ -13,6 +13,10 @@ h1 {
   font-weight: bold;
 }
 
+.highlight {
+  background-color:#FFFF00;
+}
+
 span.menu {
   display: inline-flex;
   align-items: center;
