@@ -52,11 +52,13 @@ export class CollectionComponent implements OnInit {
   public hasAudio: boolean[] = [];
   public hasSpeechMarks: boolean[] = [];
   public currWordArray = [];
+  public currSentences = [];
   public highlights = [];
   public isHighlighting = false;
   public hightlightindex = 0;
   public speechArray: speechTiming[] = [];
   public currStorySpeechMarks: speechTiming[] = [];
+  public hldelta =0;
 
   constructor(
     public openai: OpenaiService,
@@ -133,6 +135,7 @@ export class CollectionComponent implements OnInit {
     
     this.isAudioPlaying = false;
     this.yourAudioData = null;
+    this.currWordArray = [];
     if(this.source) {
       this.source.stop();
       this.soundStatus = 'play';
@@ -154,7 +157,11 @@ export class CollectionComponent implements OnInit {
       this.bookStart = true;
     }
     this.currStory = this.storyBook[this.index];
-    this.currWordArray = this.currStory.text.split(" ");
+    this.currSentences = this.currStory.text.split('\n');
+    this.currSentences.forEach(s => { if(s.length>0) {
+      s.split(" ").forEach(w => {if(w!=="") {this.currWordArray.push(w)}});
+    }
+});
     this.currWordArray.forEach((w,i) => this.highlights[i] = false);
 
     this.audioPlayerRef.nativeElement.load();
@@ -197,6 +204,7 @@ export class CollectionComponent implements OnInit {
 
   getStories(): void {
     this.storyBookLoading = true;
+    this.currWordArray = [];
     this.openai.getCollectionData().subscribe(
       (res) => {
         this.storyBookLoading = false;
@@ -217,7 +225,12 @@ export class CollectionComponent implements OnInit {
         this.currentpage = this.Pages[0];
         this.currStory = this.storyBook[0];
         
-        this.currWordArray = this.currStory.text.split(" ");
+        this.currSentences = this.currStory.text.split('\n');
+        this.currSentences.forEach(s => { if(s.length>0) {
+          s.split(" ").forEach(w => {if(w!=="") {this.currWordArray.push(w)}});
+        }
+
+    });
         this.currWordArray.forEach((w,i) => this.highlights[i] = false);
 
         this.index = 0;
@@ -258,6 +271,7 @@ export class CollectionComponent implements OnInit {
 
   getStorieswithIndex(i: number): void {
     this.storyBookLoading = true;
+    this.currWordArray = [];
     this.openai.getCollectionData().subscribe(
       (res) => {
         this.storyBookLoading = false;
@@ -277,7 +291,12 @@ export class CollectionComponent implements OnInit {
 
         this.currStory = this.storyBook[i];
 
-        this.currWordArray = this.currStory.text.split(" ");
+        this.currSentences = this.currStory.text.split('\n');
+        this.currSentences.forEach(s => { if(s.length>0) {
+          s.split(" ").forEach(w => {if(w!=="") {this.currWordArray.push(w)}});
+        }
+
+    });
         this.currWordArray.forEach((w,i) => this.highlights[i] = false);
 
         this.index = i;
@@ -392,6 +411,7 @@ export class CollectionComponent implements OnInit {
 
     this.isAudioPlaying = false;
     this.yourAudioData = null;
+    this.currWordArray = [];
     if(this.source) {
       this.source.stop();
       this.soundStatus = 'play';
@@ -407,7 +427,12 @@ export class CollectionComponent implements OnInit {
     this.index = 0;
     this.currStory = this.storyBook[this.index];
 
-    this.currWordArray = this.currStory.text.split(" ");
+    this.currSentences = this.currStory.text.split('\n');
+    this.currSentences.forEach(s => { if(s.length>0) {
+      s.split(" ").forEach(w => {if(w!=="") {this.currWordArray.push(w)}});
+    }
+
+});
     this.currWordArray.forEach((w,i) => this.highlights[i] = false);
 
     this.audioPlayerRef.nativeElement.load();
@@ -426,6 +451,7 @@ export class CollectionComponent implements OnInit {
 
     this.isAudioPlaying = false;
     this.yourAudioData = null;
+    this.currWordArray = [];
     if(this.source) {
       this.source.stop();
       this.soundStatus = 'play';
@@ -441,7 +467,12 @@ export class CollectionComponent implements OnInit {
     this.index = this.booklength - 1;
     this.currStory = this.storyBook[this.index];
 
-    this.currWordArray = this.currStory.text.split(" ");
+    this.currSentences = this.currStory.text.split('\n');
+    this.currSentences.forEach(s => { if(s.length>0) {
+      s.split(" ").forEach(w => {if(w!=="") {this.currWordArray.push(w)}});;
+    }
+
+});
     this.currWordArray.forEach((w,i) => this.highlights[i] = false);
 
     this.audioPlayerRef.nativeElement.load();
@@ -460,6 +491,7 @@ export class CollectionComponent implements OnInit {
 
     this.isAudioPlaying = false;
     this.yourAudioData = null;
+    this.currWordArray = [];
     if(this.source) {
       this.source.stop();
       this.soundStatus = 'play';
@@ -478,7 +510,11 @@ export class CollectionComponent implements OnInit {
       }
       this.currStory = this.storyBook[this.index];
 
-      this.currWordArray = this.currStory.text.split(" ");
+      this.currSentences = this.currStory.text.split('\n');
+      this.currSentences.forEach(s => { if(s.length>0) {
+        s.split(" ").forEach(w => {if(w!=="") {this.currWordArray.push(w)}});
+      }
+  });
       this.currWordArray.forEach((w,i) => this.highlights[i] = false);
 
       this.audioPlayerRef.nativeElement.load();
@@ -498,6 +534,7 @@ export class CollectionComponent implements OnInit {
 
     this.isAudioPlaying = false;
     this.yourAudioData = null;
+    this.currWordArray = [];
     if(this.source) {
       this.source.stop();
       this.soundStatus = 'play';
@@ -516,7 +553,11 @@ export class CollectionComponent implements OnInit {
       }
       this.currStory = this.storyBook[this.index];
 
-      this.currWordArray = this.currStory.text.split(" ");
+      this.currSentences = this.currStory.text.split('\n');
+      this.currSentences.forEach(s => { if(s.length>0) {
+        s.split(" ").forEach(w => {if(w!=="") {this.currWordArray.push(w)}});
+      }
+  });
       this.currWordArray.forEach((w,i) => this.highlights[i] = false);
 
       this.audioPlayerRef.nativeElement.load();
@@ -536,6 +577,7 @@ export class CollectionComponent implements OnInit {
 
     this.isAudioPlaying = false;
     this.yourAudioData = null;
+    this.currWordArray = [];
     if(this.source) {
       this.source.stop();
       this.soundStatus = 'play';
@@ -557,7 +599,11 @@ export class CollectionComponent implements OnInit {
     }
     this.currStory = this.storyBook[this.index];
 
-    this.currWordArray = this.currStory.text.split(" ");
+    this.currSentences = this.currStory.text.split('\n');
+    this.currSentences.forEach(s => { if(s.length>0) {
+      s.split(" ").forEach(w => {if(w!=="") {this.currWordArray.push(w)}});
+    }
+});
     this.currWordArray.forEach((w,i) => this.highlights[i] = false);
 
     this.audioPlayerRef.nativeElement.load();
@@ -732,6 +778,7 @@ playerPlay(): void {
       this.isAudioLoading = false;
       //console.log(res);
       this.currStorySpeechMarks = res;
+      
       this.audioPlayerRef.nativeElement.load();
       this.audioPlayerRef.nativeElement.play();
       this.isAudioPlaying = true;
@@ -835,35 +882,56 @@ async highlightStartFrom(s: number) {
 
 async trueHighlightStart() {
   if(this.highlights && this.currStorySpeechMarks) {
+    this.hldelta = 0;
+    let j = 0;
     for(let i=0; i<this.highlights.length; i++) {
       if(!this.isHighlighting) {
         this.hightlightindex = i;
         break}
-      if(i > 0) {this.highlights[i-1] = false}
-      this.highlights[i] = true;
-      if(i<this.currStorySpeechMarks.length-1) {
+      if(j > 0) {this.highlights[j-1] = false}
+      //if words match highliht it and wait for next
+      if(this.currWordArray[j].includes(this.currStorySpeechMarks[i].value)) {
+        this.highlights[j] = true;
+        if(i<this.currStorySpeechMarks.length-1) {
         await this.delay(this.currStorySpeechMarks[i+1].time - this.currStorySpeechMarks[i].time);
       } else {
         await this.delay(this.currStorySpeechMarks[i].time);
       }
+    } else {
+      console.log("skipping ", this.currWordArray[j]);
+      j +=1;
+      this.hldelta +=1;
+    }
+    j+=1;
     }
   }
 }
 
 async trueHighlightStartFrom(s: number) {
   if(this.highlights && this.currStorySpeechMarks) {
+    let j= s + this.hldelta;
+    console.log('resuming at i = ',s);
+    console.log('resuming at j = ',j);
     for(let i=s; i<this.highlights.length; i++) {
       if(!this.isHighlighting) {
         this.hightlightindex = i;
         break}
-      if(i > 0) {this.highlights[i-1] = false}
-      this.highlights[i] = true;
+      if(j > 0) {this.highlights[j-1] = false}
+      //if words match highliht it and wait for next
+      if(this.currWordArray[j].includes(this.currStorySpeechMarks[i].value)) {
+      this.highlights[j] = true;
       if(i < this.currStorySpeechMarks.length-1) {
         await this.delay(this.currStorySpeechMarks[i+1].time - this.currStorySpeechMarks[i].time);
       } else {
         await this.delay(this.currStorySpeechMarks[i].time);
       }
+    } else {
+      console.log("skipping ", this.currWordArray[j]);
+      j +=1
+      this.hldelta +=1;
     }
+    j+=1;
+  }
   }
 }
 

@@ -49,7 +49,7 @@
       <span *ngIf="currStory?.companion">avec {{ currStory.companion }}</span>
     </h2>
     <p>
-    <span *ngFor="let word of currWordArray; let k = index" [ngClass]="{'highlight':highlights[k]}">{{word}} </span>
+    <span *ngFor="let word of currWordArray; let k = index" [ngClass]="{'highlight':highlights[k]}">{{word}} <span *ngIf="currWordArray[k].includes('.')" ><br></span></span>
     </p>
   </div>
   <div class="card">
