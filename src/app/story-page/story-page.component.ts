@@ -35,6 +35,7 @@ export class StoryPageComponent implements OnInit {
   public completedimg = false;
   public saved = false;
   public message_story = '';
+  public isSaving = false;
   public allsaved = false;
   public Models: FineTune[] = [
     {
@@ -103,7 +104,6 @@ export class StoryPageComponent implements OnInit {
         (err) => {
           this.isloading_txt = false;
           this.story = err.message;
-          this.completed = true;
         }
       );
 
@@ -135,6 +135,7 @@ export class StoryPageComponent implements OnInit {
   }
 
   saveStory(): void {
+    this.isSaving = true;
     this.openai.saveImage(this.selectedimage).subscribe(
       (res) => {
         this.message_img = res.url;
@@ -148,16 +149,19 @@ export class StoryPageComponent implements OnInit {
         };
         this.openai.putCollectionData(JSON.stringify(body)).subscribe(
           (res) => {
-            this.message_story = 'Histoire enregistrée, merci de votre aide !';
+            this.message_story = 'Histoire enregistrée.';
             this.allsaved = true;
+            this.isSaving = false;
           },
           (err) => {
             this.message_story = 'Error : ' + err.message;
+            this.isSaving = false;
           }
         );
       },
       (err) => {
         this.message_img = err.message;
+        this.isSaving = false;
       }
     );
   }

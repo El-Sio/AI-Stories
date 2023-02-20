@@ -107,6 +107,7 @@
   >
     Enregistrer l'histoire complète
   </button>
+  <div *ngIf="isSaving" id="loading"></div>
   <p>{{ message_img }}</p>
   <p>{{ message_story }}</p>
 </div>
