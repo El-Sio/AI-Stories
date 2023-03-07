@@ -147,11 +147,13 @@
         [disabled]="!editingList[i]"
         [(ngModel)]="story.text"
       ></textarea>
+      <label>Audiofile :</label>
       <textarea
       class="small"
       [disabled]="!editingList[i]"
       [(ngModel)]="story.audio"
     ></textarea>
+    <label>Speechmarks :</label>
     <textarea
     class="small"
     [disabled]="!editingList[i]"

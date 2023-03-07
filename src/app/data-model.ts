@@ -5,6 +5,12 @@ export interface Choice {
   finish_reason: string;
 }
 
+export interface ChatChoice {
+  message: Message;
+  index: number;
+  finish_reason: string;
+}
+
 export interface ImageAI {
   created: number;
   data: [
@@ -41,6 +47,11 @@ export interface Model {
   object: string;
   owned_by: string;
   permission: any;
+}
+
+export interface Message {
+  role: string;
+  content: string;
 }
 
 export interface FineTuneResponse {
@@ -96,6 +107,19 @@ export interface Completion {
   created: number;
   model: string;
   choices: Choice[];
+  usage: {
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+  };
+}
+
+export interface ChatCompletion {
+  id: string;
+  object: string;
+  created: number;
+  model: string;
+  choices: ChatChoice[];
   usage: {
     prompt_tokens: number;
     completion_tokens: number;

@@ -5,7 +5,7 @@ import { OpenaiService } from '../openai.service';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../authentication.service';
 import { AppInitService } from '../app-init.service';
-import { FineTune } from '../data-model';
+import { FineTune, Message } from '../data-model';
 
 @Component({
   selector: 'app-story-page',
@@ -37,7 +37,13 @@ export class StoryPageComponent implements OnInit {
   public message_story = '';
   public isSaving = false;
   public allsaved = false;
-  public Models: FineTune[] = [
+
+  //moving to gpt-3.5
+  public messages : Message[] = [];
+  
+  public Models: string[] = [];
+
+  /*public Models: FineTune[] = [
     {
       id: 'text-davinci-003',
       object: 'fine-tune',
@@ -55,7 +61,10 @@ export class StoryPageComponent implements OnInit {
     },
   ];
   public selectedModel: FineTune;
-  public modelsloaded = false;
+  */
+ 
+  public selectedModel: string;
+ public modelsloaded = false;
 
   constructor(
     public openai: OpenaiService,
@@ -88,7 +97,29 @@ export class StoryPageComponent implements OnInit {
     console.log(prompt_txt);
     this.prompt = prompt_txt;
 
+    //moving to gpt3.5
+    this.messages.push({role:'user', content:prompt_txt});
+
     this.openai
+    .getChatCompletion(
+      this.messages,
+      this.temperature / 10,
+      this.token,
+      'gpt-3.5-turbo'
+    )
+    .subscribe(
+      (x) => {
+        this.story = x.choices[0].message.content;
+        this.isloading_txt = false;
+        this.completed = true;
+      },
+      (err) => {
+        this.isloading_txt = false;
+        this.story = err.message;
+      }
+    );
+
+    /*this.openai
       .getCompletion(
         prompt_txt,
         this.temperature / 10,
@@ -105,7 +136,7 @@ export class StoryPageComponent implements OnInit {
           this.isloading_txt = false;
           this.story = err.message;
         }
-      );
+      );*/
 
     if (this.illustrated) {
       this.isloading_img = true;
@@ -195,6 +226,11 @@ export class StoryPageComponent implements OnInit {
     this.imgsaved = false;
     this.completedimg = false;
     this.message_img = '';
+   
+    //moving to GPT 3.5
+    this.messages = [];
+    this.messages.push({role:'system',content:"Tu es un auteur d'histoires pour enfants. Tu inventes des histoires avec un vocabulaire simple destiné aux enfants."});
+
   }
 
   gotoAdmin(): void {
@@ -215,18 +251,20 @@ export class StoryPageComponent implements OnInit {
     this.token = AppInitService.currentUser.message;
     this.admin = AppInitService.currentUser.isAdmin;
     this.selectedModel = this.Models[0];
-    this.openai.ListFineTunes(this.token).subscribe(
+
+    //moving to GPT 3.5
+    this.messages.push({role:'system',content:"Tu es un auteur d'histoires pour enfants. Tu inventes des histoires avec un vocabulaire simple destiné aux enfants."});
+
+    this.openai.getModelList(this.token).subscribe(
       (res) => {
         this.modelsloaded = true;
 
         res.data.forEach((m) => {
-          if (m.fine_tuned_model) {
-            this.Models.push(m);
+            this.Models.push(m.id);
           }
-        });
+        );
 
-        this.selectedModel = this.Models[0];
-        console.log(this.Models);
+        this.selectedModel = 'gpt-3.5-turbo';
       },
       (err) => {
         this.message = 'could not load models : ' + err.message;

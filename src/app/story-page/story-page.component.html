@@ -60,12 +60,12 @@
         <option
           *ngFor="let m of Models"
           [ngValue]="m"
-          name="m.fine_tuned_model"
+          name="m"
         >
-          {{ m.fine_tuned_model }}
+          {{ m }}
         </option>
       </select>
-      <p>selected Model : {{ selectedModel.fine_tuned_model }}</p>
+      <p>selected Model : {{ selectedModel }}</p>
       <br />
       <br />
     </span>

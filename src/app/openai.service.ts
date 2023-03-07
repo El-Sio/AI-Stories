@@ -12,7 +12,9 @@ import {
   FineTune,
   ModelList,
   completeStory,
-  speechTiming
+  speechTiming,
+  Message,
+  ChatCompletion
 } from './data-model';
 import { AppInitService } from './app-init.service';
 import { User, Authent } from './data-model';
@@ -88,6 +90,37 @@ export class OpenaiService {
       'https://api.openai.com/v1/files/' + id,
       httpOptions
     );
+  }
+
+  //MOVING TO GPT 3.5
+  
+  getChatCompletion(
+    messages: Message[],
+    temp: number,
+    token: string,
+    model: string
+  ): Observable<ChatCompletion> {
+
+    let body = {
+      model: model,
+      messages: messages,
+      max_tokens: 2500,
+      temperature: temp
+    };
+
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      }),
+    };
+
+    return this.http.post<ChatCompletion>(
+      'https://api.openai.com/v1/chat/completions',
+      body,
+      httpOptions
+    );
+
   }
 
   getCompletion(
