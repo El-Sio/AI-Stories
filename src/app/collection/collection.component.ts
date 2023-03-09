@@ -35,7 +35,7 @@ export class CollectionComponent implements OnInit {
   public popupclass: string[] = [];
   public currentpage: completeStory[];
   public Pages: completeStory[][] = [];
-  public STORIES_PER_PAGE = 8;
+  public STORIES_PER_PAGE = 12;
   public pageIndex = 0;
   public pageNumber = 0;
   public firstPage = true;
@@ -383,7 +383,7 @@ export class CollectionComponent implements OnInit {
       companion;
 
     console.log('calling open AI');
-    this.openai.getImage(prompt, this.token).subscribe(
+    this.openai.getImage(prompt, this.token, 1).subscribe(
       (img) => {
         console.log('got image data, calling php endpoint');
         this.openai.saveImage(img.data[0].b64_json).subscribe(

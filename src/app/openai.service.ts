@@ -93,7 +93,7 @@ export class OpenaiService {
   }
 
   //MOVING TO GPT 3.5
-  
+
   getChatCompletion(
     messages: Message[],
     temp: number,
@@ -302,10 +302,10 @@ export class OpenaiService {
     );
   }
 
-  getImage(prompt: string, token: string): Observable<ImageAI> {
+  getImage(prompt: string, token: string, n: number): Observable<ImageAI> {
     let body = {
       prompt: prompt,
-      n: 2,
+      n: n,
       size: '512x512',
       response_format: 'b64_json',
     };

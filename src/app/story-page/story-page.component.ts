@@ -140,7 +140,7 @@ export class StoryPageComponent implements OnInit {
 
     if (this.illustrated) {
       this.isloading_img = true;
-      this.openai.getImage(prompt_img, this.token).subscribe(
+      this.openai.getImage(prompt_img, this.token, 4).subscribe(
         (x) => {
           x.data.forEach(item => {
             this.imgsrc.push(item.b64_json);
