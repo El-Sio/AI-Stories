@@ -85,6 +85,17 @@
         <button class="pause" [disabled]="!isAudioPlaying && !isAudioStarted" (click)="playerPause()"><img src="assets/{{playStatus}}.png" width="24" height="24"></button>
         <button class="stop" [disabled]="!isAudioStarted" (click)="playerStop()"><img src="assets/stop.png" width="24" height="24"></button>
         </span>
+        <label>Vitesse de lecture : x{{ readingRate /10 }}</label>
+        <input
+          type="range"
+          min="5"
+          max="20"
+          value="10"
+          class="slider"
+          id="myRange"
+          name="readingrate"
+          [(ngModel)]="readingRate"
+        />
       </div>
         <button
       *ngIf="admin"

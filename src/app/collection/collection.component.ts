@@ -61,6 +61,7 @@ export class CollectionComponent implements OnInit {
   public hldelta =0;
   public showAbout = false;
   public aboutLabel = 'A propos de ce site...';
+  public readingRate = 10;
 
   constructor(
     public openai: OpenaiService,
@@ -782,6 +783,10 @@ playerPlay(): void {
       this.currStorySpeechMarks = res;
       
       this.audioPlayerRef.nativeElement.load();
+
+      //playbackrate test
+      this.audioPlayerRef.nativeElement.playbackRate = this.readingRate/10;
+
       this.audioPlayerRef.nativeElement.play();
       this.isAudioPlaying = true;
       this.isAudioStarted = true;
@@ -812,6 +817,9 @@ playerPause(): void {
     this.isHighlighting = false;
     this.playStatus = 'play';
   } else if(this.audioPlayerRef.nativeElement.paused) {
+
+      //playbackrate test
+      this.audioPlayerRef.nativeElement.playbackRate = this.readingRate/10;
     this.audioPlayerRef.nativeElement.play();
     this.isAudioPlaying = true;
     this.isHighlighting = true;
@@ -895,9 +903,9 @@ async trueHighlightStart() {
       if(this.currWordArray[j].includes(this.currStorySpeechMarks[i].value)) {
         this.highlights[j] = true;
         if(i<this.currStorySpeechMarks.length-1) {
-        await this.delay(this.currStorySpeechMarks[i+1].time - this.currStorySpeechMarks[i].time);
+        await this.delay((this.currStorySpeechMarks[i+1].time - this.currStorySpeechMarks[i].time)*(1/(this.readingRate/10)));
       } else {
-        await this.delay(this.currStorySpeechMarks[i].time);
+        await this.delay(this.currStorySpeechMarks[i].time*(1/(this.readingRate/10)));
       }
     } else {
       console.log("skipping ", this.currWordArray[j]);
@@ -923,9 +931,9 @@ async trueHighlightStartFrom(s: number) {
       if(this.currWordArray[j].includes(this.currStorySpeechMarks[i].value)) {
       this.highlights[j] = true;
       if(i < this.currStorySpeechMarks.length-1) {
-        await this.delay(this.currStorySpeechMarks[i+1].time - this.currStorySpeechMarks[i].time);
+        await this.delay((this.currStorySpeechMarks[i+1].time - this.currStorySpeechMarks[i].time)*(1/(this.readingRate/10)));
       } else {
-        await this.delay(this.currStorySpeechMarks[i].time);
+        await this.delay(this.currStorySpeechMarks[i].time*(1/(this.readingRate/10)));
       }
     } else {
       console.log("skipping ", this.currWordArray[j]);

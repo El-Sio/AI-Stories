@@ -22,6 +22,7 @@ span.menu {
   align-items: center;
   width: 100%;
   justify-content: center;
+  margin-bottom: 15px;
 }
 
 p.nav {
