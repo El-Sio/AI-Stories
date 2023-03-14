@@ -59,6 +59,8 @@ export class CollectionComponent implements OnInit {
   public speechArray: speechTiming[] = [];
   public currStorySpeechMarks: speechTiming[] = [];
   public hldelta =0;
+  public showAbout = false;
+  public aboutLabel = 'A propos de ce site...';
 
   constructor(
     public openai: OpenaiService,
@@ -933,6 +935,11 @@ async trueHighlightStartFrom(s: number) {
     j+=1;
   }
   }
+}
+
+about():void {
+  this.showAbout = !this.showAbout;
+  if(this.showAbout) {this.aboutLabel = 'Fermer'} else {this.aboutLabel = 'A propos de ce site...'}
 }
 
 delay(ms) {

@@ -1,12 +1,21 @@
 <h1>Les histoires de Fifi et Rhino</h1>
 
 <div class="card">
+  <span *ngIf="showAbout">
+    <p>Ce site est un recueil d'histoires pour enfants écrites avec le moteur GPT-3.5 Turbo d'<a href="https://openai.com/">OpenAI</a>.</p>
+    <p>Il raconte les histoires de deux personnages inventés pour mes filles Agathe et Zoé : Fifi la girafe et Rhino le rhinocéros, dont les aventures sont imaginées par elles à peu près tous les soirs à partir d'une simple phrase à écrire ensemble :</p>
+      <p>"fifi et rhino vont quelque part pour faire quelque chose (avec quelqu'un en option).".</p>
+    <p>L'I.A fait le reste, y compris les illustrations.</p>
+      <p>Les histoires sont lues par une autre I.A <a href="https://aws.amazon.com/fr/polly/">AWS Polly</a> pour les plus jeunes et propose un suivi de lecture (mot prononcé en surbrillance) pour une aide à la lecture des un peu moins jeunes.</p>
+      <p>J'ai fait ce site pour expérimenter à titre personnel sur les nouveaux modèles d'Intelligence Artificielle appliqués à la création de contenu pédagogique et je souhaitais partager publiquement le résultat.</p>
+      <p>Merci de votre visite et si vous être intéressés par cette expérience ou avez des suggestions d'améliorations, n'hésitez pas à m'envoyer un email à <a href="mailto:elsiokun+fifi@gmail.com">elsiokun+fifi@gmail.com</a></p>
+  </span>
+  <button (click)="about()" >
+    {{aboutLabel}}
+  </button>
   <button (click)="getStories()" >
     Actualiser les Histoires
   </button>
-</div>
-
-<div class="card">
   <button (click)="gotoStories()">Créer une nouvelle histoire</button>
   <button *ngIf="login && admin" (click)="gotoAdmin()">Administrer</button>
 </div>
