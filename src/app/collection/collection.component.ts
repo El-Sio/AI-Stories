@@ -945,6 +945,10 @@ async trueHighlightStartFrom(s: number) {
   }
 }
 
+changeRate(val: any) {
+  this.audioPlayerRef.nativeElement.playbackRate = this.readingRate/10;
+}
+
 about():void {
   this.showAbout = !this.showAbout;
   if(this.showAbout) {this.aboutLabel = 'Fermer'} else {this.aboutLabel = 'A propos de ce site...'}

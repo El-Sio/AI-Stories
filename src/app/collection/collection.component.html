@@ -95,6 +95,7 @@
           id="myRange"
           name="readingrate"
           [(ngModel)]="readingRate"
+          (change)="changeRate($event.target)"
         />
       </div>
         <button
