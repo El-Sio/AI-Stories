@@ -253,7 +253,7 @@ export class StoryPageComponent implements OnInit {
     this.selectedModel = this.Models[0];
 
     //moving to GPT 3.5
-    this.messages.push({role:'system',content:"Tu es un auteur d'histoires pour enfants. Tu inventes des histoires avec un vocabulaire simple destiné aux enfants. Toutes les histoires commencent par 'Un jour, Fifi et Rhino'"});
+    this.messages.push({role:'system',content:"Tu es un auteur d'histoires pour enfants. Tu inventes des histoires avec un vocabulaire simple destiné aux enfants. Toutes les histoires commencent par 'Un jour, Fifi et Rhino'. ajoute au moins un élément de surprise ou un élément humoristique dans chaque histoire."});
 
     this.openai.getModelList(this.token).subscribe(
       (res) => {
