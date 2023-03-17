@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OpenaiService } from '../openai.service';
-import { completeStory, speechTiming } from '../data-model';
+import { completeStory, speechTiming, Message } from '../data-model';
 import { AppInitService } from '../app-init.service';
 import { AuthenticationService } from '../authentication.service';
 //import * as AWS from 'aws-sdk';
@@ -62,6 +62,7 @@ export class CollectionComponent implements OnInit {
   public showAbout = false;
   public aboutLabel = 'A propos de ce site...';
   public readingRate = 10;
+  public messages: Message[] = [];
 
   constructor(
     public openai: OpenaiService,
@@ -77,6 +78,9 @@ export class CollectionComponent implements OnInit {
     this.token = AppInitService.currentUser?.message;
     this.login = AppInitService.currentUser?.user;
     this.aws = AppInitService.currentUser?.aws;
+
+    //initiate a new chat to summarize stories to get better images.
+    this.messages.push({role:'system',content:'résume les histoires proposées en une phrase utilisant les mot clés les plus visuels pour décrire le contenu. Les résumés commencent par "illustration de livre pour enfant représentant une girafe et un rhinocéros qui"'});
 
     this.getStories();
 
@@ -371,8 +375,10 @@ export class CollectionComponent implements OnInit {
     this.imagechanging = true;
 
     this.oldimage[i] = this.storyBook[i].image;
+    this.messages = [];
+    this.messages.push({role:'system',content:'résume les histoires proposées en une phrase utilisant les mot clés les plus visuels pour décrire le contenu. Les résumés commencent par "illustration de livre pour enfant représentant une girafe et un rhinocéros qui"'});
 
-    let companion = '';
+    /*let companion = '';
 
     if (this.storyBook[i].companion) {
       companion = ' avec ' + this.storyBook[i].companion;
@@ -384,24 +390,42 @@ export class CollectionComponent implements OnInit {
       ' ' +
       this.storyBook[i].location +
       companion;
+ */
+      this.messages.push({role:'user', content:this.storyBook[i].text});
 
-    console.log('calling open AI');
-    this.openai.getImage(prompt, this.token, 1).subscribe(
-      (img) => {
-        console.log('got image data, calling php endpoint');
-        this.openai.saveImage(img.data[0].b64_json).subscribe(
-          (res) => {
-            this.imagechanging = false;
-            this.imagemessage = 'image modifiée avec succès';
-            this.storyBook[i].image = res.url;
-            this.isGeneric[i] = false;
-            this.isModified[i] = true;
+    console.log('calling open AI', this.messages);
+
+    //summarize story
+    this.openai.getChatCompletion(this.messages,0.8,this.token,'gpt-3.5-turbo').subscribe(
+      (x) => {
+        let prompt = x.choices[0].message.content;
+
+        console.log('resumé : ', prompt);
+
+        //get image from openaI
+        this.openai.getImage(prompt, this.token, 1).subscribe(
+          (img) => {
+            console.log('got image data, calling php endpoint');
+            this.openai.saveImage(img.data[0].b64_json).subscribe(
+              (res) => {
+                this.imagechanging = false;
+                this.imagemessage = 'image modifiée avec succès';
+                this.storyBook[i].image = res.url;
+                this.isGeneric[i] = false;
+                this.isModified[i] = true;
+              },
+              (err) => {
+                this.imagechanging = false;
+                this.imagemessage = 'Erreur : ' + err.message;
+              }
+            );
           },
           (err) => {
             this.imagechanging = false;
             this.imagemessage = 'Erreur : ' + err.message;
           }
         );
+
       },
       (err) => {
         this.imagechanging = false;

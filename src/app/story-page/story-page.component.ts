@@ -40,6 +40,7 @@ export class StoryPageComponent implements OnInit {
 
   //moving to gpt-3.5
   public messages : Message[] = [];
+  public summarymessages: Message[] = [];
   
   public Models: string[] = [];
 
@@ -87,13 +88,6 @@ export class StoryPageComponent implements OnInit {
       this.storyPurpose +
       companion;
 
-    let prompt_img =
-      'illustration de livre pour enfants avec une girafe et un rhinocéros en train de ' +
-      this.storyPurpose +
-      ' ' +
-      this.storyPlace +
-      companion;
-
     console.log(prompt_txt);
     this.prompt = prompt_txt;
 
@@ -112,6 +106,40 @@ export class StoryPageComponent implements OnInit {
         this.story = x.choices[0].message.content;
         this.isloading_txt = false;
         this.completed = true;
+
+        if(this.illustrated) {
+        this.isloading_img = true;
+        //getting a summary for Dall-E
+        console.log('fetching summary');
+        this.summarymessages.push({role:'user',content:this.story});
+        this.openai.getChatCompletion(this.summarymessages,0.8,this.token,'gpt-3.5-turbo').subscribe(
+          (summ) => {
+            let prompt_img = summ.choices[0].message.content;
+            console.log('resumé : ', prompt_img);
+            this.openai.getImage(prompt_img, this.token, 4).subscribe(
+              (x) => {
+                x.data.forEach(item => {
+                  this.imgsrc.push(item.b64_json);
+                  this.ischecked.push(false);
+                });
+                this.selectedimage = this.imgsrc[0];
+                this.ischecked[0] = true;
+                this.isloading_img = false;
+                this.completedimg = true;
+              },
+              (err) => {
+                this.isloading_img = false;
+                this.imgsrc = err.message;
+              }
+            );
+          },
+          (err) => {
+            this.isloading_img = false;
+            this.imgsrc = err.message;
+          }
+        );
+      }
+
       },
       (err) => {
         this.isloading_txt = false;
@@ -137,26 +165,6 @@ export class StoryPageComponent implements OnInit {
           this.story = err.message;
         }
       );*/
-
-    if (this.illustrated) {
-      this.isloading_img = true;
-      this.openai.getImage(prompt_img, this.token, 4).subscribe(
-        (x) => {
-          x.data.forEach(item => {
-            this.imgsrc.push(item.b64_json);
-            this.ischecked.push(false);
-          });
-          this.selectedimage = this.imgsrc[0];
-          this.ischecked[0] = true;
-          this.isloading_img = false;
-          this.completedimg = true;
-        },
-        (err) => {
-          this.isloading_img = false;
-          this.imgsrc = err.message;
-        }
-      );
-    }
   }
 
   logout(): void {
@@ -220,7 +228,7 @@ export class StoryPageComponent implements OnInit {
     this.storyPurpose = '';
     this.storyCompanion = '';
     this.prompt = '';
-    this.illustrated = false;
+    this.illustrated = true;
     this.message = '';
     this.saved = false;
     this.imgsaved = false;
@@ -230,6 +238,9 @@ export class StoryPageComponent implements OnInit {
     //moving to GPT 3.5
     this.messages = [];
     this.messages.push({role:'system',content:"Tu es un auteur d'histoires pour enfants. Tu inventes des histoires avec un vocabulaire simple destiné aux enfants. Toutes les histoires commencent par 'Un jour, Fifi et Rhino'"});
+
+    this.summarymessages = [];
+    this.summarymessages.push({role:'system',content:'résume les histoires proposées en une phrase utilisant les mot clés les plus visuels pour décrire le contenu. Les résumés commencent par "illustration de livre pour enfant représentant une girafe et un rhinocéros qui"'});
 
   }
 
@@ -254,6 +265,9 @@ export class StoryPageComponent implements OnInit {
 
     //moving to GPT 3.5
     this.messages.push({role:'system',content:"Tu es un auteur d'histoires pour enfants. Tu inventes des histoires avec un vocabulaire simple destiné aux enfants. Toutes les histoires commencent par 'Un jour, Fifi et Rhino'. ajoute au moins un élément de surprise ou un élément humoristique dans chaque histoire."});
+
+    //trying feeding story summary to dall-E instead of original prompt
+    this.summarymessages.push({role:'system',content:'résume les histoires proposées en une phrase utilisant les mot clés les plus visuels pour décrire le contenu. Les résumés commencent par "illustration de livre pour enfant représentant une girafe et un rhinocéros qui"'});
 
     this.openai.getModelList(this.token).subscribe(
       (res) => {
