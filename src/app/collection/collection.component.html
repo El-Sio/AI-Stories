@@ -20,6 +20,15 @@
   <button *ngIf="login && admin" (click)="gotoAdmin()">Administrer</button>
 </div>
 
+<div class="card">
+<input type="text" placeholder="rechercher une histoire" name="search" [(ngModel)]="searchTerm" >
+<button (click)="searchstories(searchTerm)">Rechercher</button>
+</div>
+
+<div *ngIf="isSearching">
+  <div *ngIf="isSearching" id="loading"></div>
+</div>
+
 <div *ngIf="storyBookLoading">
   <div *ngIf="storyBookLoading" id="loading"></div>
 </div>
@@ -85,6 +94,7 @@
         <button class="pause" [disabled]="!isAudioPlaying && !isAudioStarted" (click)="playerPause()"><img src="assets/{{playStatus}}.png" width="24" height="24"></button>
         <button class="stop" [disabled]="!isAudioStarted" (click)="playerStop()"><img src="assets/stop.png" width="24" height="24"></button>
         </span>
+        <span *ngIf="currStory.audio">
         <label>Vitesse de lecture : x{{ readingRate /10 }}</label>
         <input
           type="range"
@@ -97,9 +107,10 @@
           [(ngModel)]="readingRate"
           (change)="changeRate($event.target)"
         />
+      </span>
       </div>
         <button
-      *ngIf="admin"
+      *ngIf="admin || !isSearchResult"
       [disabled]="imagechanging"
       (click)="changeImage(index)"
     >

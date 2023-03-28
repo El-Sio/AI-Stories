@@ -63,6 +63,9 @@ export class CollectionComponent implements OnInit {
   public aboutLabel = 'A propos de ce site...';
   public readingRate = 10;
   public messages: Message[] = [];
+  public searchTerm = '';
+  public isSearching = false;
+  public isSearchResult = false;
 
   constructor(
     public openai: OpenaiService,
@@ -210,8 +213,10 @@ export class CollectionComponent implements OnInit {
   }
 
   getStories(): void {
+    this.searchTerm = "";
     this.storyBookLoading = true;
     this.currWordArray = [];
+
     this.openai.getCollectionData().subscribe(
       (res) => {
         this.storyBookLoading = false;
@@ -276,6 +281,129 @@ export class CollectionComponent implements OnInit {
     );
   }
 
+  searchstories(term: string): void {
+
+    console.log ('searching for : ', term);
+
+    this.isSearchResult = true;
+
+    this.Pages = [];
+    this.storyBook = [];
+    this.currentpage = [];
+    this.isGeneric = [];
+    this.hasAudio = [];
+    this.hasSpeechMarks = [];
+    this.isModified = [];
+
+    if(term==="") {this.getStories(); return}
+
+    term = term.toLowerCase();
+
+    this.storyBookLoading = true;
+    this.currWordArray = [];
+
+    //loading book
+    this.openai.getCollectionData().subscribe(
+      (res) => {
+        this.storyBookLoading = false;
+
+        let tempbook =res.slice(0, -1);
+        // this might take some time ?
+        this.isSearching = true;
+        console.log('searching');
+
+        //filter book if term is in title or content.
+        tempbook.forEach( s => {
+          if(s.location.toLowerCase().includes(term) || s.purpose.toLowerCase().includes(term) ||(s.companion || '').toLowerCase().includes(term)) {
+            this.storyBook.push(s);
+          } else if(s.text.includes(term)) {
+            this.storyBook.push(s);
+          }
+        });
+
+        // no search results
+        if(this.storyBook.length == 0) {
+
+          this.storyBookLoading = false;
+          this.isSearching = false;
+          this.message = 'Aucune histoire trouvée';
+         let dummystory = {
+            'text':"votre recherche n'a retourné aucun résultat, essayez avec d'autres termes",
+            'image':'https://japansio.info/fifi/uploads/generic.png',
+            'audio':'',
+            'speechMarks':'',
+            'location':'chercher à nouveau',
+            'purpose': 'trouver une histoire qui vous convienne',
+            'companion':''
+          }
+
+          this.storyBook.push(dummystory);
+          this.currStory = this.storyBook[0];
+
+        }
+
+        this.storyBook.reverse();
+
+        this.isSearching = false;
+
+        this.booklength = this.storyBook.length;
+
+        this.storyBook.forEach((s,i) => {
+          this.oldimage[i] = '';
+          this.Pages[Math.floor(i/this.STORIES_PER_PAGE)] = [];
+        });
+        this.storyBook.forEach((s,i) => {
+          this.Pages[Math.floor(i/this.STORIES_PER_PAGE)].push(s)
+        });
+        this.pageNumber = this.Pages.length;
+        this.currentpage = this.Pages[0];
+        this.currStory = this.storyBook[0];
+        
+        this.currSentences = this.currStory.text.split('\n');
+        this.currSentences.forEach(s => { if(s.length>0) {
+          s.split(" ").forEach(w => {if(w!=="") {this.currWordArray.push(w)}});
+        }
+
+    });
+        this.currWordArray.forEach((w,i) => this.highlights[i] = false);
+
+        this.index = 0;
+        this.bookStart = true;
+        this.bookEnd = false;
+        this.storyBookLoaded = true;
+        this.message = this.message =
+          'Histoire ' +
+          (this.index + 1).toString() +
+          ' sur ' +
+          this.storyBook.length.toString();
+
+        this.storyBook.forEach((s, i) => {
+
+          if (s.image === 'https://japansio.info/fifi/uploads/generic.png') {
+            this.isGeneric[i] = true;
+          }
+          if (!s.audio) {
+            this.hasAudio[i] = false;
+          }
+          if (s.audio) {
+            this.hasAudio[i] = true;
+          }
+          if(s.speechMarks) {
+            this.hasSpeechMarks[i] = true;
+          }
+          if(!s.speechMarks) {
+            this.hasSpeechMarks[i] = false;
+          }
+        });
+      },
+      (err) => {
+        this.storyBookLoading = false;
+        this.message = 'Erreur : ' + err.message;
+      }
+    );
+
+  }
+
   getStorieswithIndex(i: number): void {
     this.storyBookLoading = true;
     this.currWordArray = [];
@@ -337,6 +465,7 @@ export class CollectionComponent implements OnInit {
       },
       (err) => {
         this.storyBookLoading = false;
+        this.isSearching =false;
         this.message = 'Erreur : ' + err.message;
       }
     );
