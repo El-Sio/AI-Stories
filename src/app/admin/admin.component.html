@@ -112,6 +112,7 @@
   <button (click)="getStories()" [disabled]="isloading || complete">
     Récupérer les données de training
   </button>
+  <button *ngIf="complete" (click)="reverseBook()">Inverser les histoires</button>
   <button *ngIf="complete" (click)="saveStories()" [disabled]="!changed">
     Enregistrer les données de training
   </button>

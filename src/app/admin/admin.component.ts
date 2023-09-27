@@ -127,6 +127,11 @@ export class AdminComponent implements OnInit {
     );
   }
 
+  reverseBook(): void {
+    this.storybook.reverse();
+    this.changed = true;
+  }
+
   delete(index: number): void {
     let result = confirm("êtes vous sur de vouloir supprimer cette histoire ?");
     if (result) {
